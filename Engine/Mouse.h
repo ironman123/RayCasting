@@ -71,7 +71,7 @@ public:
 		{
 			return type;
 		}
-		Vec2 GetPos() const
+		Vei2 GetPos() const
 		{
 			return{ x,y };
 		}
@@ -96,7 +96,7 @@ public:
 	Mouse() = default;
 	Mouse( const Mouse& ) = delete;
 	Mouse& operator=( const Mouse& ) = delete;
-	Vec2 GetPos() const;
+	Vei2 GetPos() const;
 	int GetPosX() const;
 	int GetPosY() const;
 	bool LeftIsPressed() const;

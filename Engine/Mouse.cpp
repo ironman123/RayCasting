@@ -21,7 +21,7 @@
 #include "Mouse.h"
 
 
-Vec2 Mouse::GetPos() const
+Vei2 Mouse::GetPos() const
 {
 	return { x,y };
 }

@@ -50,6 +50,6 @@ private:
 	std::random_device rd;
 	Board brd;
 	const int radius = 250;
-	Vec2 p;
+	Vei2 p;
 	/********************************/
 };

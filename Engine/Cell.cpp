@@ -6,12 +6,12 @@
 //{
 //}
 
-void Cell::Draw(Graphics& gfx, const Vec2& loc) const
+void Cell::Draw(Graphics& gfx, const Vei2& loc) const
 {
 	gfx.DrawRectDim(loc.x * celldim, loc.y * celldim, celldim, celldim, cellColor);
 }
 
-void Cell::DrawOutLine(Graphics& gfx, const Vec2& loc) const
+void Cell::DrawOutLine(Graphics& gfx, const Vei2& loc) const
 {
 	gfx.DrawRectOutLine(loc.x * celldim, loc.y * celldim, celldim, celldim, outlineColor);
 }

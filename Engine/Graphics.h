@@ -23,7 +23,6 @@
 #include <wrl.h>
 #include "ChiliException.h"
 #include "Colors.h"
-#include "Vec2F.h"
 #include "Vec2.h"
 
 class Graphics
@@ -58,19 +57,19 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
-	void DrawCircle(const Vec2& p, int radius, Color c);
-	void DrawCircleOutline(const Vec2& p, int radius, Color c);
-	void DrawLinedCircle(const Vec2& p, int radius, Color c);
+	void DrawCircle(const Vei2& p, int radius, Color c);
+	void DrawCircleOutline(const Vei2& p, int radius, Color c);
+	void DrawLinedCircle(const Vei2& p, int radius, Color c);
 	void DrawRect(int x0, int y0, int x1, int y1, Color c);
 	void DrawRectDim(int x, int y, int width, int height, Color c)
 	{
 		DrawRect(x, y, x + width, y + height, c);
 	}
-	Color GetColor(const Vec2& pos)const;
+	Color GetColor(const Vei2& pos)const;
 	void DrawRectOutLine(int x0, int y0, int width, int height, Color c);
-	void DrawLine(Vec2F& p1, Vec2F& p2, Color c);
-	void DrawLineDDA(Vec2F& p1, Vec2F& p2, Color c);
-	void DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c);
+	void DrawLine(Vef2& p1, Vef2& p2, Color c);
+	void DrawLineDDA(Vef2& p1, Vef2& p2, Color c);
+	void DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

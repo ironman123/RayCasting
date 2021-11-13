@@ -241,7 +241,7 @@ Graphics::Graphics( HWNDKey& key )
 		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ) );
 }
 
-Color Graphics::GetColor(const Vec2& pos) const
+Color Graphics::GetColor(const Vei2& pos) const
 {
 	return pSysBuffer[Graphics::ScreenWidth * pos.y + pos.x].GetColor();
 }
@@ -258,7 +258,7 @@ void Graphics::DrawRectOutLine(int x0, int y0, int width, int height, Color c)
 	}
 }
 
-void Graphics::DrawLine(Vec2F& p1, Vec2F& p2, Color c)
+void Graphics::DrawLine(Vef2& p1, Vef2& p2, Color c)
 {
 	float m = 0.0f;
 	const float xDiff = (p2.x - p1.x);
@@ -283,7 +283,7 @@ void Graphics::DrawLine(Vec2F& p1, Vec2F& p2, Color c)
 				//Screen clipping
 				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 				{
-					if (GetColor(Vec2(x,(int)y)) == cellColor)
+					if (GetColor(Vei2(x,(int)y)) == cellColor)
 					{
 						break;
 					}
@@ -309,7 +309,7 @@ void Graphics::DrawLine(Vec2F& p1, Vec2F& p2, Color c)
 				//Screen clipping
 				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 				{
-					if (GetColor(Vec2((int)x,y)) == cellColor)
+					if (GetColor(Vei2((int)x,y)) == cellColor)
 					{
 						break;
 					}
@@ -323,7 +323,7 @@ void Graphics::DrawLine(Vec2F& p1, Vec2F& p2, Color c)
 	}
 }
 
-void Graphics::DrawLineDDA(Vec2F& p1, Vec2F& p2, Color c)
+void Graphics::DrawLineDDA(Vef2& p1, Vef2& p2, Color c)
 {
 	const Color cellColor = Color{ 90,0,210 };
 	const float xDiff = (p2.x - p1.x);
@@ -341,7 +341,7 @@ void Graphics::DrawLineDDA(Vec2F& p1, Vec2F& p2, Color c)
 		for (int i = 0; i <= (int)step; i++)
 		{
 
-			if (GetColor(Vec2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
+			if (GetColor(Vei2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
 			{
 				break;
 				X += incX;
@@ -360,7 +360,7 @@ void Graphics::DrawLineDDA(Vec2F& p1, Vec2F& p2, Color c)
 	}
 }
 
-void Graphics::DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c)
+void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
 {
 	float m = 0.0f;
 	const float xDiff = (p2.x - p1.x);
@@ -382,7 +382,7 @@ void Graphics::DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vec2(x, (int)y)) == cellColor)
+						if (GetColor(Vei2(x, (int)y)) == cellColor)
 						{
 							break;
 						}
@@ -403,7 +403,7 @@ void Graphics::DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vec2(x, (int)y)) == cellColor)
+						if (GetColor(Vei2(x, (int)y)) == cellColor)
 						{
 							break;
 						}
@@ -427,7 +427,7 @@ void Graphics::DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vec2((int)x, y)) == cellColor)
+						if (GetColor(Vei2((int)x, y)) == cellColor)
 						{
 							break;
 						}
@@ -449,7 +449,7 @@ void Graphics::DrawLineFromPoint(Vec2F& p1, Vec2F& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vec2((int)x, y)) == cellColor)
+						if (GetColor(Vei2((int)x, y)) == cellColor)
 						{
 							break;
 						}
@@ -540,7 +540,7 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
-void Graphics::DrawCircle(const Vec2& p, int radius, Color c)
+void Graphics::DrawCircle(const Vei2& p, int radius, Color c)
 {
 	for (int y_loop = p.y - radius; y_loop < p.y + radius; y_loop++)
 	{
@@ -555,7 +555,7 @@ void Graphics::DrawCircle(const Vec2& p, int radius, Color c)
 	}
 }
 
-void Graphics::DrawCircleOutline(const Vec2& p, int radius, Color c)
+void Graphics::DrawCircleOutline(const Vei2& p, int radius, Color c)
 {
 	const int radSq = radius * radius;
 	for (int y_loop = p.y - radius; y_loop < p.y + radius + 1; y_loop++)
@@ -571,7 +571,7 @@ void Graphics::DrawCircleOutline(const Vec2& p, int radius, Color c)
 	}
 }
 
-void Graphics::DrawLinedCircle(const Vec2& p, int radius, Color c)
+void Graphics::DrawLinedCircle(const Vei2& p, int radius, Color c)
 {
 	const int radSq = radius * radius;
 	for (int y_loop = p.y - radius; y_loop < p.y + radius + 1; y_loop++)
@@ -584,8 +584,8 @@ void Graphics::DrawLinedCircle(const Vec2& p, int radius, Color c)
 				//Screen clipping
 				if (x_loop > 0 && x_loop < Graphics::ScreenWidth && y_loop > 0 && y_loop < Graphics::ScreenHeight)
 				{
-					//DrawLineFromPoint(Vec2F((float)p.x, (float)p.y), Vec2F((float)x_loop, (float)y_loop), c);
-					DrawLineDDA(Vec2F((float)p.x, (float)p.y), Vec2F((float)x_loop, (float)y_loop), c);
+					//DrawLineFromPoint(Vef2((float)p.x, (float)p.y), Vef2((float)x_loop, (float)y_loop), c);
+					DrawLineDDA(Vef2((float)p.x, (float)p.y), Vef2((float)x_loop, (float)y_loop), c);
 				}
 			}
 		}

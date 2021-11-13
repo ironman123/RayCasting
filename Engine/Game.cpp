@@ -60,25 +60,25 @@ void Game::ComposeFrame()
 	//{
 	//	for (int x = 0; x < Graphics::ScreenWidth; x += 90)
 	//	{
-	//		gfx.DrawLine(Vec2F((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vec2F((float)x, (float)y), Colors::Red);
-	//		gfx.DrawLine(Vec2F((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vec2F((float)x, (float)y), Colors::Red);
+	//		gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2((float)x, (float)y), Colors::Red);
+	//		gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2((float)x, (float)y), Colors::Red);
 	//	}
 	//}
 
 	//for (int x = 0; x < Graphics::ScreenWidth; x++)
 	//{
-	//	gfx.DrawLine(Vec2F((float)x, 0.0f), Vec2F((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Colors::Red);
+	//	gfx.DrawLine(Vef2((float)x, 0.0f), Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Colors::Red);
 	//}
 	//for (int y = 0; y < Graphics::ScreenHeight; y++)
 	//{
-	//	gfx.DrawLine(Vec2F((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vec2F(0.0f, (float)y), Colors::Red);
+	//	gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2(0.0f, (float)y), Colors::Red);
 	//}
 
 	
 	//gfx.DrawLinedCircle(p, radius, Colors::Magenta);
 	//if(wnd.mouse.RightIsPressed())
 	ft.Start();
-	gfx.DrawLinedCircle(Vec2(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), radius, Colors::Red);
+	gfx.DrawLinedCircle(Vei2(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), radius, Colors::Red);
 	float dt = ft.Stop();
 	std::ostringstream ss;
 	ss << dt;
@@ -86,7 +86,7 @@ void Game::ComposeFrame()
 	OutputDebugStringA("time taken: ");
 	OutputDebugStringA(s.c_str());
 	OutputDebugStringA("\n");
-	//gfx.DrawLineDDA(Vec2F(50.0f, 50.0f), Vec2F(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), Colors::Red);
-	//gfx.DrawCircleOutline(Vec2(300, 200), 180, Colors::Blue);
+	//gfx.DrawLineDDA(Vef2(50.0f, 50.0f), Vef2(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), Colors::Red);
+	//gfx.DrawCircleOutline(Vei2(300, 200), 180, Colors::Blue);
 	//brd.DrawGrid(gfx);
 }

@@ -7,7 +7,7 @@ void Board::DrawCells(Graphics& gfx)const
 	{
 		for (int y = 0; y < height; y++)
 		{
-			const Vec2 loc = { x,y };
+			const Vei2 loc = { x,y };
 			if (cells[x + (width * y)].ActiveStatus())
 			{
 				cells[x + (width * y)].Draw(gfx, loc);
@@ -22,23 +22,23 @@ void Board::DrawGrid(Graphics& gfx) const
 	{
 		for (int y = 0; y < height; y++)
 		{
-			const Vec2 loc = { x,y };
+			const Vei2 loc = { x,y };
 			cells[x + (width * y)].DrawOutLine(gfx, loc);
 		}
 	}
 }
 
-bool Board::IsInsideBoard(const Vec2& loc) const
+bool Board::IsInsideBoard(const Vei2& loc) const
 {
 	return loc.x >= 0 && loc.x < width&& loc.y >= 0 && loc.y < height;
 }
 
-void Board::SetColorToCell(const Vec2& loc, Color c)
+void Board::SetColorToCell(const Vei2& loc, Color c)
 {
 	cells[loc.x + (width * loc.y)].SetColor(c);
 }
 
-void Board::ToggleCellStatus(const Vec2& loc)
+void Board::ToggleCellStatus(const Vei2& loc)
 {
 	cells[loc.x + (width * loc.y)].ToggleActive();
 }
@@ -54,14 +54,14 @@ void Board::ClearAllCells()
 	}
 }
 
-void Board::GetCellStatus(const Vec2& loc) const
+void Board::GetCellStatus(const Vei2& loc) const
 {
 	cells[loc.x + (width * loc.y)].ActiveStatus();
 }
 
-Vec2 Board::GetCell(const Vec2& mouseLoc) const
+Vei2 Board::GetCell(const Vei2& mouseLoc) const
 {
-	return Vec2((mouseLoc.x) / Cell::celldim, (mouseLoc.y) / Cell::celldim);
+	return Vei2((mouseLoc.x) / Cell::celldim, (mouseLoc.y) / Cell::celldim);
 }
 
 int Board::GetWidth() const
