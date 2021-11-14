@@ -55,38 +55,5 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	brd.DrawCells(gfx);
-	//for (int y = 0; y < Graphics::ScreenHeight; y += 90)
-	//{
-	//	for (int x = 0; x < Graphics::ScreenWidth; x += 90)
-	//	{
-	//		gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2((float)x, (float)y), Colors::Red);
-	//		gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2((float)x, (float)y), Colors::Red);
-	//	}
-	//}
-
-	//for (int x = 0; x < Graphics::ScreenWidth; x++)
-	//{
-	//	gfx.DrawLine(Vef2((float)x, 0.0f), Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Colors::Red);
-	//}
-	//for (int y = 0; y < Graphics::ScreenHeight; y++)
-	//{
-	//	gfx.DrawLine(Vef2((float)wnd.mouse.GetPos().x, (float)wnd.mouse.GetPos().y), Vef2(0.0f, (float)y), Colors::Red);
-	//}
-
 	
-	//gfx.DrawLinedCircle(p, radius, Colors::Magenta);
-	//if(wnd.mouse.RightIsPressed())
-	ft.Start();
-	gfx.DrawLinedCircle(Vei2(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), radius, Colors::Red);
-	float dt = ft.Stop();
-	std::ostringstream ss;
-	ss << dt;
-	std::string s(ss.str());
-	OutputDebugStringA("time taken: ");
-	OutputDebugStringA(s.c_str());
-	OutputDebugStringA("\n");
-	//gfx.DrawLineDDA(Vef2(50.0f, 50.0f), Vef2(wnd.mouse.GetPos().x, wnd.mouse.GetPos().y), Colors::Red);
-	//gfx.DrawCircleOutline(Vei2(300, 200), 180, Colors::Blue);
-	//brd.DrawGrid(gfx);
 }
