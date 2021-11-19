@@ -5,7 +5,8 @@ template <typename T>
 class Vec2
 {
 public:
-	Vec2() = default;
+	Vec2()
+	{}
 
 	Vec2(T in_x, T in_y)
 		:
@@ -71,29 +72,47 @@ public:
 		return (x == rhs.x && y == rhs.y);
 	}
 
-	T GetLengthSq() const
+	bool operator!=(const Vec2& rhs)const
 	{
-		return x * x + y * y;
+		return !(*this == rhs);
+	}
+
+	T LengthSq() const
+	{
+		return sq(*this);
 	}
 
 	T Length() const
 	{
-		return (T)std::sqrt(GetLengthSq());
+		return sqrt(LengthSq());
 	}
 
 	Vec2& Normalize()
 	{
-		return *this = GetNormalized();
+		const T length = Length();
+
+		x /= length;
+		y /= length;
+
+		return *this;
 	}
 
 	Vec2 GetNormalized() const
 	{
-		const T len = GetLength();
+		Vec2 norm = *this;
+		norm.Normalize();
+		return norm;
+	}
 
-		if (len != T(0))
-		{
-			return *this / len;
-		}
+	Vec2 operator-()const
+	{
+		return Vec2(-x, -y);
+	}
+
+	Vec2& operator=(const Vec2& rhs)
+	{
+		x = rhs.x;
+		y = rhs.y;
 		return *this;
 	}
 public:
@@ -101,5 +120,6 @@ public:
 	T y;
 };
 
+typedef Vec2<double> Ved2;
 typedef Vec2<float> Vef2;
 typedef Vec2<int> Vei2;
