@@ -11,7 +11,9 @@ float FrameTimer::Mark()
 	auto oldLast = last;
 	last = steady_clock::now();
 
-	return (last - oldLast).count();
+	duration<float> dur = (last - oldLast);
+
+	return dur.count();
 }
 
 void FrameTimer::Start()

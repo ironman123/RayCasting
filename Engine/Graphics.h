@@ -24,6 +24,7 @@
 #include "ChiliException.h"
 #include "Colors.h"
 #include "Vec2.h"
+#include <vector>
 
 class Graphics
 {
@@ -67,9 +68,10 @@ public:
 	}
 	Color GetColor(const Vei2& pos)const;
 	void DrawRectOutLine(int x0, int y0, int width, int height, Color c);
-	void DrawLine(Vef2& p1, Vef2& p2, Color c);
-	void DrawLineDDA(Vef2& p1, Vef2& p2, Color c);
-	void DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c);
+	void DrawLine(Vef2 p1, Vef2 p2, Color c);
+	void DrawLineDDA(Vei2 p1, Vei2 p2, Color c);
+	void DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c);
+	void DrawClosedPolyline(const std::vector<Vef2>& verts, Color c);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

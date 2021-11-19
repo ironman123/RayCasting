@@ -21,15 +21,22 @@
 #include "MainWindow.h"
 #include "Game.h"
 #include <random>
-#include <sstream>
+#include "Star.h"
 
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
 	rng(rd()),
-	p(300,200)
+	ct(gfx),
+	cam(ct)
 {
+	entities.emplace_back(Star::Make(100.0f, 50.0f), Vef2{ -100.0f,100.0f });
+	entities.emplace_back(Star::Make(120.0f, 80.0f), Vef2{ 200.0f,50.0f });
+	entities.emplace_back(Star::Make(150.0f, 50.0f), Vef2{ -50.0f,-50.0f });
+	entities.emplace_back(Star::Make(300.0f, 50.0f, 6), Vef2{ 400.0f,200.0f });
+	entities.emplace_back(Star::Make(100.0f, 50.0f, 8), Vef2{ -300.0f,100.0f });
+	entities.emplace_back(Star::Make(200.0f, 20.0f, 30), Vef2{ 100.0f,300.0f });
 }
 
 void Game::Go()
@@ -42,18 +49,42 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	Mouse::Event readMouse = wnd.mouse.Read();
-	if (readMouse.LeftIsPressed())
+	while (!wnd.mouse.IsEmpty())
 	{
-		brd.ToggleCellStatus(brd.GetCell(wnd.mouse.GetPos()));
+		const auto e = wnd.mouse.Read();
+		if (e.GetType() == Mouse::Event::Type::WheelUp)
+		{
+			cam.SetScale(cam.GetScale() * 1.05f);
+		}
+		if (e.GetType() == Mouse::Event::Type::WheelDown)
+		{
+			cam.SetScale(cam.GetScale() * 0.95f);
+		}
 	}
-	else if (wnd.kbd.KeyIsPressed('C'))
+
+	float speed = 3.0f;
+	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		brd.ClearAllCells();
+		cam.MoveBy({ 0.0f, speed });
+	}
+	if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	{
+		cam.MoveBy({ 0.0f, -speed });
+	}
+	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	{
+		cam.MoveBy({ -speed, 0.0f });
+	}
+	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	{
+		cam.MoveBy({ speed, 0.0f });
 	}
 }
 
 void Game::ComposeFrame()
 {
-	
+	for (const auto& e : entities)
+	{
+		cam.DrawClosedPolyline(std::move(e.GetPolyline()), Colors::Yellow);
+	}
 }

@@ -258,11 +258,11 @@ void Graphics::DrawRectOutLine(int x0, int y0, int width, int height, Color c)
 	}
 }
 
-void Graphics::DrawLine(Vef2& p1, Vef2& p2, Color c)
+void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 {
 	float m = 0.0f;
-	const float xDiff = (p2.x - p1.x);
-	const float yDiff = (p2.y - p1.y);
+	const float xDiff = ((float)p2.x - (float)p1.x);
+	const float yDiff = ((float)p2.y - (float)p1.y);
 	const Color cellColor = Color{ 90,0,210 };
 
 	if (p1.x != p2.x)
@@ -283,14 +283,7 @@ void Graphics::DrawLine(Vef2& p1, Vef2& p2, Color c)
 				//Screen clipping
 				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 				{
-					if (GetColor(Vei2(x,(int)y)) == cellColor)
-					{
-						break;
-					}
-					else
-					{
-						PutPixel(x, (int)y, c);
-					}
+					PutPixel(x, (int)y, c);
 				}
 			}
 		}
@@ -309,25 +302,18 @@ void Graphics::DrawLine(Vef2& p1, Vef2& p2, Color c)
 				//Screen clipping
 				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 				{
-					if (GetColor(Vei2((int)x,y)) == cellColor)
-					{
-						break;
-					}
-					else
-					{
-						PutPixel((int)x, y, c);
-					}
+					PutPixel((int)x, y, c);
 				}
 			}
 		}
 	}
 }
 
-void Graphics::DrawLineDDA(Vef2& p1, Vef2& p2, Color c)
+void Graphics::DrawLineDDA(Vei2 p1, Vei2 p2, Color c)
 {
 	const Color cellColor = Color{ 90,0,210 };
-	const float xDiff = (p2.x - p1.x);
-	const float yDiff = (p2.y - p1.y);
+	const float xDiff = ((float)p2.x - (float)p1.x);
+	const float yDiff = ((float)p2.y - (float)p1.y);
 	if (p1.x != p2.x)
 	{
 		float step = abs(xDiff) > abs(yDiff) ? abs(xDiff) : abs(yDiff);
@@ -335,24 +321,24 @@ void Graphics::DrawLineDDA(Vef2& p1, Vef2& p2, Color c)
 		float incX = xDiff / step;
 		float incY = yDiff / step;
 
-		float X = p1.x;
-		float Y = p1.y;
+		float X = (float)p1.x;
+		float Y = (float)p1.y;
 
 		for (int i = 0; i <= (int)step; i++)
 		{
 
-			if (GetColor(Vei2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
-			{
-				break;
-				X += incX;
-				Y += incY;
-			}
-			else
-			{
-				PutPixel(ROUNDNUM(X), ROUNDNUM(Y), c);
-			}
+			//if (GetColor(Vei2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
+			//{
+			//	break;
+			//	X += incX;
+			//	Y += incY;
+			//}
+			//else
+			//{
+			//	PutPixel(ROUNDNUM(X), ROUNDNUM(Y), c);
+			//}
 
-			//PutPixel(round(X), round(Y), c);
+			PutPixel(round(X), round(Y), c);
 			
 			X += incX;
 			Y += incY;
@@ -360,11 +346,11 @@ void Graphics::DrawLineDDA(Vef2& p1, Vef2& p2, Color c)
 	}
 }
 
-void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
+void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 {
 	float m = 0.0f;
-	const float xDiff = (p2.x - p1.x);
-	const float yDiff = (p2.y - p1.y);
+	const float xDiff = ((float)p2.x - (float)p1.x);
+	const float yDiff = ((float)p2.y - (float)p1.y);
 	const Color cellColor = Color{ 90,0,210 };
 
 	if (p1.x != p2.x)
@@ -382,14 +368,7 @@ void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vei2(x, (int)y)) == cellColor)
-						{
-							break;
-						}
-						else
-						{
-							PutPixel(x, (int)y, c);
-						}
+						PutPixel(x, (int)y, c);
 					}
 				}
 			}
@@ -403,14 +382,7 @@ void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vei2(x, (int)y)) == cellColor)
-						{
-							break;
-						}
-						else
-						{
-							PutPixel(x, (int)y, c);
-						}
+						PutPixel(x, (int)y, c);
 					}
 				}
 			}
@@ -427,14 +399,7 @@ void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vei2((int)x, y)) == cellColor)
-						{
-							break;
-						}
-						else
-						{
-							PutPixel((int)x, y, c);
-						}
+						PutPixel((int)x, y, c);
 					}
 				}
 			}
@@ -449,19 +414,21 @@ void Graphics::DrawLineFromPoint(Vef2& p1, Vef2& p2, Color c)
 					//Screen clipping
 					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 					{
-						if (GetColor(Vei2((int)x, y)) == cellColor)
-						{
-							break;
-						}
-						else
-						{
-							PutPixel((int)x, y, c);
-						}
+						PutPixel((int)x, y, c);
 					}
 				}
 			}
 		}
 	}
+}
+
+void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, Color c)
+{
+	for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
+	{
+		DrawLine(*i, *std::next(i), c);
+	}
+	DrawLine(verts.back(), verts.front(), c);
 }
 
 Graphics::~Graphics()
@@ -585,7 +552,7 @@ void Graphics::DrawLinedCircle(const Vei2& p, int radius, Color c)
 				if (x_loop > 0 && x_loop < Graphics::ScreenWidth && y_loop > 0 && y_loop < Graphics::ScreenHeight)
 				{
 					//DrawLineFromPoint(Vef2((float)p.x, (float)p.y), Vef2((float)x_loop, (float)y_loop), c);
-					DrawLineDDA(Vef2((float)p.x, (float)p.y), Vef2((float)x_loop, (float)y_loop), c);
+					DrawLineDDA(Vei2(p.x, p.y), Vei2(x_loop, y_loop), c);
 				}
 			}
 		}

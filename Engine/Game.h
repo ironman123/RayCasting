@@ -26,6 +26,9 @@
 #include <random>
 #include "Board.h"
 #include "FrameTimer.h"
+#include "CoordinateTransformer.h"
+#include "Entity.h"
+#include "Camera.h"
 
 class Game
 {
@@ -48,8 +51,8 @@ private:
 	FrameTimer ft;
 	std::mt19937 rng;
 	std::random_device rd;
-	Board brd;
-	int radius = 50;
-	Vei2 p;
+	CoordinateTransformer ct;
+	std::vector<Entity> entities;
+	Camera cam;
 	/********************************/
 };

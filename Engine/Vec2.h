@@ -14,11 +14,16 @@ public:
 	{
 	}
 
-	Vec2(const Vec2<float>& src)
+	Vec2(const Vec2& vect)
 		:
-		x((T)src.x),
-		y((T)src.y)
+		Vec2(vect.x, vect.y)
 	{
+	}
+
+	template <typename T2>
+	explicit operator Vec2<T2>() const
+	{
+		return { (T2)x, (T2)y };
 	}
 
 	Vec2 operator+(const Vec2& rhs) const
@@ -71,7 +76,7 @@ public:
 		return x * x + y * y;
 	}
 
-	T GetLength() const
+	T Length() const
 	{
 		return (T)std::sqrt(GetLengthSq());
 	}
