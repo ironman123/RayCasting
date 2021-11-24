@@ -277,7 +277,7 @@ void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 			}
 			const float b = p2.y - (m * p2.x);
 
-			for (int x = (int)p1.x; x < (int)p2.x; x++)
+			for (int x = (int)p1.x; x <= (int)p2.x; x++)
 			{
 				const float y = (m * (float)x) + b;
 				//Screen clipping
@@ -296,7 +296,7 @@ void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 			const float w = xDiff / yDiff;
 			const float p = p2.x - (w * p2.y);
 
-			for (int y = (int)p1.y; y < (int)p2.y; y++)
+			for (int y = (int)p1.y; y <= (int)p2.y; y++)
 			{
 				const float x = (w * (float)y) + p;
 				//Screen clipping
@@ -362,7 +362,7 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 			const float b = p2.y - (m * p2.x);
 			if (p1.x > p2.x)
 			{
-				for (int x = (int)p1.x; x > (int)p2.x; x--)
+				for (int x = (int)p1.x; x >= (int)p2.x; x--)
 				{
 					const float y = (m * (float)x) + b;
 					//Screen clipping
@@ -376,7 +376,7 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 			{
 				const float b = p2.y - (m * p2.x);
 
-				for (int x = (int)p1.x; x < (int)p2.x; x++)
+				for (int x = (int)p1.x; x <= (int)p2.x; x++)
 				{
 					const float y = (m * (float)x) + b;
 					//Screen clipping
@@ -393,7 +393,7 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 			{
 				const float w = xDiff / yDiff;
 				const float p = p2.x - (w * p2.y);
-				for (int y = (int)p1.y; y > (int)p2.y; y--)
+				for (int y = (int)p1.y; y >= (int)p2.y; y--)
 				{
 					const float x = (w * (float)y) + p;
 					//Screen clipping
@@ -408,7 +408,7 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 				const float w = xDiff / yDiff;
 				const float p = p2.x - (w * p2.y);
 
-				for (int y = (int)p1.y; y < (int)p2.y; y++)
+				for (int y = (int)p1.y; y <= (int)p2.y; y++)
 				{
 					const float x = (w * (float)y) + p;
 					//Screen clipping
@@ -422,13 +422,26 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 	}
 }
 
-void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, Color c)
+void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& translation, float scaleX, float scaleY, Color c)
 {
+	const Vef2 scale = { scaleX, scaleY };
+	
+	const auto xForm = [&](Vef2 v)
+	{
+		v *= scale;
+		v += translation;
+		return v;
+	};
+
+	const Vef2 front = xForm(verts.front());
+	Vef2 cur = front;
 	for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
 	{
-		DrawLine(*i, *std::next(i), c);
+		const Vec2 next = xForm(*std::next(i));
+		DrawLine(cur, next, c);
+		//weird arrow effect due to not setting cur = next after drawing a line :D
 	}
-	DrawLine(verts.back(), verts.front(), c);
+	DrawLine(cur, front, c);
 }
 
 Graphics::~Graphics()
