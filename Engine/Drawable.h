@@ -2,14 +2,15 @@
 #include "Vec2.h"
 #include <vector>
 #include "Graphics.h"
+#include <memory>
 
 class Drawable
 {
 public:
-	Drawable(std::vector<Vef2> model, Color c)
+	Drawable(const std::vector<Vef2>& model, Color c)
 		:
 		c(c),
-		model(model)
+		model(&model)
 	{}
 	void Translate(const Vef2& translation_in)
 	{
@@ -30,19 +31,12 @@ public:
 	}
 	void Render(Graphics& gfx)
 	{
-		for (auto& v : model)
-		{
-			v.x *= scaleX;
-			v.y *= scaleY;
-			v += translation;
-		}
-		gfx.DrawClosedPolyline(model, c);
+		gfx.DrawClosedPolyline(*model, translation, scaleX, scaleY, c);
 	}
 private:
 	Color c;
-	std::vector<Vef2> model;
+	const std::vector<Vef2>* model;
 	Vef2 translation = { 0.0f,0.0f };
 	float scaleX = 1.0f;
 	float scaleY = 1.0f;
-	
 };

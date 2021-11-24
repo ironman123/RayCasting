@@ -67,6 +67,16 @@ public:
 		return *this = *this / scaler;
 	}
 
+	Vec2 operator*(const Vec2& rhs) const
+	{
+		return Vec2(x * rhs.x, y * rhs.y);
+	}
+
+	Vec2& operator*=(const Vec2& rhs)
+	{
+		return *this = *this * rhs;
+	}
+
 	bool operator==(const Vec2& rhs) const
 	{
 		return (x == rhs.x && y == rhs.y);
@@ -79,7 +89,7 @@ public:
 
 	T LengthSq() const
 	{
-		return sq(*this);
+		return x * x + y * y;
 	}
 
 	T Length() const

@@ -1,12 +1,14 @@
 #pragma once
 #include "Vec2.h"
 #include <vector>
+#include "Drawable.h"
 
 class Entity
 {
 public:
-	Entity(std::vector<Vef2> model, const Vef2& pos_in = { 0.0f,0.0f })
+	Entity(std::vector<Vef2> model, const Vef2& pos_in = { 0.0f,0.0f }, Color c = Colors::Yellow)
 		:
+		c(c),
 		pos(pos_in),
 		model(std::move(model))
 	{
@@ -31,17 +33,16 @@ public:
 	{
 		return scale;
 	}
-	std::vector<Vef2> GetPolyline()const
+	Drawable GetDrawable()const
 	{
-		auto poly = model;
-		for (auto& v : poly)
-		{
-			v *= scale;
-			v += pos;
-		}
-		return poly;
+		Drawable d(model, c);
+		d.Scale(scale);
+		d.Translate(pos);
+		
+		return d;
 	}
 private:
+	Color c;
 	float scale = 1.0f;
 	Vef2 pos;
 	std::vector<Vef2> model;

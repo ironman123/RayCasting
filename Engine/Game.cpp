@@ -22,6 +22,7 @@
 #include "Game.h"
 #include <random>
 #include "Star.h"
+#include <algorithm>
 
 Game::Game(MainWindow& wnd)
 	:
@@ -31,12 +32,31 @@ Game::Game(MainWindow& wnd)
 	ct(gfx),
 	cam(ct)
 {
-	entities.emplace_back(Star::Make(100.0f, 50.0f), Vef2{ -100.0f,100.0f });
-	entities.emplace_back(Star::Make(120.0f, 80.0f), Vef2{ 200.0f,50.0f });
-	entities.emplace_back(Star::Make(150.0f, 50.0f), Vef2{ -50.0f,-50.0f });
-	entities.emplace_back(Star::Make(300.0f, 50.0f, 6), Vef2{ 400.0f,200.0f });
-	entities.emplace_back(Star::Make(100.0f, 50.0f, 8), Vef2{ -300.0f,100.0f });
-	entities.emplace_back(Star::Make(200.0f, 20.0f, 30), Vef2{ 100.0f,300.0f });
+	std::uniform_real_distribution<float> xDist(-fieldWidth / 2.0f, fieldWidth / 2.0f);
+	std::uniform_real_distribution<float> yDist(-fieldHeight / 2.0f, fieldHeight / 2.0f);
+	std::normal_distribution<float> radDist(meanRadius, devRadius);
+	std::normal_distribution<float> ratDist(meanRatio, devRatio);
+	std::normal_distribution<float> flareDist(meanFlares, devFlares);
+
+	const Color colors[] = { Colors::Red, Colors::Green, Colors::Yellow, Colors::Blue, Colors::Cyan, Colors::White, Colors::Magenta };
+	std::uniform_int_distribution<size_t> cDist(0, std::end(colors) - std::begin(colors));
+
+	while (stars.size() < nStars)
+	{
+		const auto rad = std::clamp(radDist(rng), minRadius, maxRadius);
+		const Vef2 pos = { xDist(rng), yDist(rng) };
+
+		if (std::any_of(stars.begin(), stars.end(), [&](const StarBro& sb) { return (sb.GetPos() - pos).Length() < sb.GetRadius() + rad; }))
+		{
+			continue;
+		}
+
+		const auto ratio = std::clamp(ratDist(rng), minRatio, maxRatio);
+		const auto flares = std::clamp((int)flareDist(rng), minnFlares, maxnFlares);
+		const Color c = colors[cDist(rng)];
+
+		stars.emplace_back(rad, ratio, rng, pos, flares, c);
+	}
 }
 
 void Game::Go()
@@ -79,12 +99,19 @@ void Game::UpdateModel()
 	{
 		cam.MoveBy({ speed, 0.0f });
 	}
+
+	float dt = ft.Mark();
+
+	for (auto& e : stars)
+	{
+		e.Update(dt, rng, e.GetDrawable());
+	}
 }
 
 void Game::ComposeFrame()
 {
-	for (const auto& e : entities)
+	for (auto& e : stars)
 	{
-		cam.DrawClosedPolyline(std::move(e.GetPolyline()), Colors::Yellow);
+		cam.Draw(e.GetDrawable());
 	}
 }

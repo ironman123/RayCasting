@@ -31,6 +31,8 @@ public:
 	void Draw(Drawable& drawable)const
 	{
 		drawable.Translate(-pos);
+		drawable.Scale(scale);
+		ct.Draw(drawable);
 	}
 private:
 	CoordinateTransformer& ct;

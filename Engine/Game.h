@@ -29,6 +29,7 @@
 #include "CoordinateTransformer.h"
 #include "Entity.h"
 #include "Camera.h"
+#include "StarBro.h"
 
 class Game
 {
@@ -51,8 +52,26 @@ private:
 	FrameTimer ft;
 	std::mt19937 rng;
 	std::random_device rd;
+
+	static constexpr float fieldWidth = 10000.0f;
+	static constexpr float fieldHeight = 6000.0f;
+	static constexpr int nStars = 500;
+	static constexpr float maxRadius = 300.0f;
+	static constexpr float minRadius = 40.0f;
+	static constexpr float meanRadius = 170.0f;
+	static constexpr float devRadius = 90.0f;
+	static constexpr float maxRatio = 0.75f;
+	static constexpr float minRatio = 0.15f;
+	static constexpr float meanRatio = 0.45f;
+	static constexpr float devRatio = 0.25f;
+	static constexpr float meanFlares = 6.5f;
+	static constexpr float devFlares = 2.0f;
+	static constexpr int maxnFlares = 10;
+	static constexpr int minnFlares = 3;
+
 	CoordinateTransformer ct;
-	std::vector<Entity> entities;
 	Camera cam;
+	std::vector<StarBro> stars;
+
 	/********************************/
 };

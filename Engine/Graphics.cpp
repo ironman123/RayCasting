@@ -439,7 +439,7 @@ void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& tr
 	{
 		const Vec2 next = xForm(*std::next(i));
 		DrawLine(cur, next, c);
-		//weird arrow effect due to not setting cur = next after drawing a line :D
+		cur = next;
 	}
 	DrawLine(cur, front, c);
 }
