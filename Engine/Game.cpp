@@ -30,13 +30,18 @@ Game::Game(MainWindow& wnd)
 	gfx(wnd),
 	rng(rd()),
 	ct(gfx),
-	cam(ct)
+	cam(ct),
+	camCtrl(cam,wnd.mouse)
 {
 	std::uniform_real_distribution<float> xDist(-fieldWidth / 2.0f, fieldWidth / 2.0f);
 	std::uniform_real_distribution<float> yDist(-fieldHeight / 2.0f, fieldHeight / 2.0f);
 	std::normal_distribution<float> radDist(meanRadius, devRadius);
 	std::normal_distribution<float> ratDist(meanRatio, devRatio);
 	std::normal_distribution<float> flareDist(meanFlares, devFlares);
+	std::normal_distribution<float> colorFreqDist(meanColorFreq, devColorFreq);
+	std::uniform_real_distribution<float> phaseDist(0.0f, 2.0f * 3.14159f);
+	std::normal_distribution<float> scaleAmplitudeDist(meanscaleAmplitude, devscaleAmplitude);
+	std::normal_distribution<float> scaleFreqDist(meanColorFreq, devColorFreq);
 
 	const Color colors[] = { Colors::Red, Colors::Green, Colors::Yellow, Colors::Blue, Colors::Cyan, Colors::White, Colors::Magenta };
 	std::uniform_int_distribution<size_t> cDist(0, std::end(colors) - std::begin(colors));
@@ -46,16 +51,26 @@ Game::Game(MainWindow& wnd)
 		const auto rad = std::clamp(radDist(rng), minRadius, maxRadius);
 		const Vef2 pos = { xDist(rng), yDist(rng) };
 
-		if (std::any_of(stars.begin(), stars.end(), [&](const StarBro& sb) { return (sb.GetPos() - pos).Length() < sb.GetRadius() + rad; }))
+		const auto scaleAmplitude = std::clamp(scaleAmplitudeDist(rng), minscaleAmplitude, maxscaleAmplitude);
+		const float maxRad = rad * (1.0f + scaleAmplitude);
+
+		if (std::any_of(stars.begin(), stars.end(), [&](const StarBro& sb) { return (sb.GetPos() - pos).Length() < sb.GetMaxRadius() + maxRad; }))
 		{
 			continue;
 		}
 
+		
 		const auto ratio = std::clamp(ratDist(rng), minRatio, maxRatio);
 		const auto flares = std::clamp((int)flareDist(rng), minnFlares, maxnFlares);
+
+		const auto scaleFrequency = std::clamp(scaleFreqDist(rng), minscaleFreq, maxscaleFreq);
+		const auto scalePhase = phaseDist(rng);
+
+		const auto colorFreq = std::clamp(colorFreqDist(rng), minColorFreq, maxColorFreq);
+		const auto colorPhase = phaseDist(rng);
 		const Color c = colors[cDist(rng)];
 
-		stars.emplace_back(rad, ratio, rng, pos, flares, c);
+		stars.emplace_back(rad, ratio, colorFreq, colorPhase, scaleAmplitude, scaleFrequency, scalePhase, pos, flares, c);
 	}
 }
 
@@ -69,18 +84,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	while (!wnd.mouse.IsEmpty())
-	{
-		const auto e = wnd.mouse.Read();
-		if (e.GetType() == Mouse::Event::Type::WheelUp)
-		{
-			cam.SetScale(cam.GetScale() * 1.05f);
-		}
-		if (e.GetType() == Mouse::Event::Type::WheelDown)
-		{
-			cam.SetScale(cam.GetScale() * 0.95f);
-		}
-	}
+	camCtrl.Update();
 
 	float speed = 3.0f;
 	if (wnd.kbd.KeyIsPressed(VK_UP))
@@ -104,14 +108,18 @@ void Game::UpdateModel()
 
 	for (auto& e : stars)
 	{
-		e.Update(dt, rng, e.GetDrawable());
+		e.Update(dt);
 	}
 }
 
 void Game::ComposeFrame()
 {
+	const RectF vp = cam.GetViewPort();
 	for (auto& e : stars)
 	{
-		cam.Draw(e.GetDrawable());
+		if (e.GetRect().IsOverLappingWith(vp))
+		{
+			cam.Draw(e.GetDrawable());
+		}
 	}
 }

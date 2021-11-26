@@ -30,6 +30,7 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "StarBro.h"
+#include "CamMouseCtrl.h"
 
 class Game
 {
@@ -55,7 +56,7 @@ private:
 
 	static constexpr float fieldWidth = 10000.0f;
 	static constexpr float fieldHeight = 6000.0f;
-	static constexpr int nStars = 500;
+	static constexpr int nStars = 600;
 	static constexpr float maxRadius = 300.0f;
 	static constexpr float minRadius = 40.0f;
 	static constexpr float meanRadius = 170.0f;
@@ -68,9 +69,22 @@ private:
 	static constexpr float devFlares = 2.0f;
 	static constexpr int maxnFlares = 10;
 	static constexpr int minnFlares = 3;
+	static constexpr float meanColorFreq = 1.8f;
+	static constexpr float devColorFreq = 1.0f;
+	static constexpr float minColorFreq = 0.6f;
+	static constexpr float maxColorFreq = 4.0f;
+	static constexpr float meanscaleAmplitude = 0.5f;
+	static constexpr float devscaleAmplitude = 0.3f;
+	static constexpr float minscaleAmplitude = 0.1f;
+	static constexpr float maxscaleAmplitude = 0.9f;
+	static constexpr float meanscaleFreq = 1.8f;
+	static constexpr float devscaleFreq = 1.0f;
+	static constexpr float minscaleFreq = 0.6f;
+	static constexpr float maxscaleFreq = 4.0f;
 
 	CoordinateTransformer ct;
 	Camera cam;
+	CamMouseCtrl camCtrl;
 	std::vector<StarBro> stars;
 
 	/********************************/

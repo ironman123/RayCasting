@@ -29,6 +29,10 @@ public:
 	{
 		scale = val;
 	}
+	void SetColor(Color c_in)
+	{
+		c = c_in;
+	}
 	float GetScale()const
 	{
 		return scale;
