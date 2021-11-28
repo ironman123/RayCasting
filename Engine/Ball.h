@@ -26,17 +26,9 @@ public:
 	{
 		vel = vel_in;
 	}
-	bool IsSpwaned()const
-	{
-		return isSpwaned;
-	}
 	void Update(float dt)
 	{
 		TranslateBy(vel * dt);
-		if (!isSpwaned && DistanceSqBetween2Points(GetPos(),spwanPos) > sq(GetRadius() * 2.0f))
-		{
-			isSpwaned = true;
-		}
 	}
 private:
 	Vef2 spwanPos;

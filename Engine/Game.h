@@ -62,6 +62,8 @@ private:
 
 	Plank plank;
 	std::vector<Ball> balls;
+	static constexpr float radius = 15.0f;
+	static constexpr float minBallColDist = 2.0 * radius;
 	Spwaner spwaner;
 	/********************************/
 };

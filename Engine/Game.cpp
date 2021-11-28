@@ -34,7 +34,7 @@ Game::Game(MainWindow& wnd)
 	cam(ct),
 	camCtrl(cam,wnd.mouse),
 	plank({ 180.0f,150.0f }, -240.0f, -300.0f, 300.0f),
-	spwaner(balls, 15.0f, Vef2{ 0.0f,-180.0f }, 84.0f, -12.0f, 12.0f, 1.5f)
+	spwaner(balls, radius, Vef2{ 0.0f,-180.0f }, 84.0f, -12.0f, 12.0f, 0.5f)
 {
 	
 }
@@ -69,9 +69,8 @@ void Game::UpdateModel()
 
 		for (auto& b : balls)
 		{
-			const float radSq = 4.0 * (ball.GetRadius()) * (ball.GetRadius());
 			const float distance = (b.GetPos() - ball.GetPos()).LengthSq();
-			if (b.GetPos() != ball.GetPos() && distance <= radSq)
+			if (b.GetPos() != ball.GetPos() && distance <= sq(minBallColDist))
 			{
 				ball.SetColor(Colors::Cyan);
 				b.SetColor(Colors::Cyan);
