@@ -78,10 +78,22 @@
     <ClInclude Include="Drawable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StarBro.h">
+    <ClInclude Include="CamMouseCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CamMouseCtrl.h">
+    <ClInclude Include="Plank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spwaner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiliMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

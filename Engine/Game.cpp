@@ -23,6 +23,7 @@
 #include <random>
 #include "Star.h"
 #include <algorithm>
+#include "ChiliMath.h"
 
 Game::Game(MainWindow& wnd)
 	:
@@ -31,47 +32,11 @@ Game::Game(MainWindow& wnd)
 	rng(rd()),
 	ct(gfx),
 	cam(ct),
-	camCtrl(cam,wnd.mouse)
+	camCtrl(cam,wnd.mouse),
+	plank({ 180.0f,150.0f }, -240.0f, -300.0f, 300.0f),
+	spwaner(balls, 15.0f, Vef2{ 0.0f,-180.0f }, 84.0f, -12.0f, 12.0f, 1.5f)
 {
-	std::uniform_real_distribution<float> xDist(-fieldWidth / 2.0f, fieldWidth / 2.0f);
-	std::uniform_real_distribution<float> yDist(-fieldHeight / 2.0f, fieldHeight / 2.0f);
-	std::normal_distribution<float> radDist(meanRadius, devRadius);
-	std::normal_distribution<float> ratDist(meanRatio, devRatio);
-	std::normal_distribution<float> flareDist(meanFlares, devFlares);
-	std::normal_distribution<float> colorFreqDist(meanColorFreq, devColorFreq);
-	std::uniform_real_distribution<float> phaseDist(0.0f, 2.0f * 3.14159f);
-	std::normal_distribution<float> scaleAmplitudeDist(meanscaleAmplitude, devscaleAmplitude);
-	std::normal_distribution<float> scaleFreqDist(meanColorFreq, devColorFreq);
-
-	const Color colors[] = { Colors::Red, Colors::Green, Colors::Yellow, Colors::Blue, Colors::Cyan, Colors::White, Colors::Magenta };
-	std::uniform_int_distribution<size_t> cDist(0, std::end(colors) - std::begin(colors));
-
-	while (stars.size() < nStars)
-	{
-		const auto rad = std::clamp(radDist(rng), minRadius, maxRadius);
-		const Vef2 pos = { xDist(rng), yDist(rng) };
-
-		const auto scaleAmplitude = std::clamp(scaleAmplitudeDist(rng), minscaleAmplitude, maxscaleAmplitude);
-		const float maxRad = rad * (1.0f + scaleAmplitude);
-
-		if (std::any_of(stars.begin(), stars.end(), [&](const StarBro& sb) { return (sb.GetPos() - pos).Length() < sb.GetMaxRadius() + maxRad; }))
-		{
-			continue;
-		}
-
-		
-		const auto ratio = std::clamp(ratDist(rng), minRatio, maxRatio);
-		const auto flares = std::clamp((int)flareDist(rng), minnFlares, maxnFlares);
-
-		const auto scaleFrequency = std::clamp(scaleFreqDist(rng), minscaleFreq, maxscaleFreq);
-		const auto scalePhase = phaseDist(rng);
-
-		const auto colorFreq = std::clamp(colorFreqDist(rng), minColorFreq, maxColorFreq);
-		const auto colorPhase = phaseDist(rng);
-		const Color c = colors[cDist(rng)];
-
-		stars.emplace_back(rad, ratio, colorFreq, colorPhase, scaleAmplitude, scaleFrequency, scalePhase, pos, flares, c);
-	}
+	
 }
 
 void Game::Go()
@@ -86,40 +51,54 @@ void Game::UpdateModel()
 {
 	camCtrl.Update();
 
-	float speed = 3.0f;
-	if (wnd.kbd.KeyIsPressed(VK_UP))
-	{
-		cam.MoveBy({ 0.0f, speed });
-	}
+	float dt = ft.Mark();
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		cam.MoveBy({ 0.0f, -speed });
+		plank.MoveFreeY(-2.0f);
 	}
-	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		cam.MoveBy({ -speed, 0.0f });
-	}
-	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
-	{
-		cam.MoveBy({ speed, 0.0f });
+		plank.MoveFreeY(2.0f);
 	}
 
-	float dt = ft.Mark();
-
-	for (auto& e : stars)
+	for (auto& ball : balls)
 	{
-		e.Update(dt);
+		ball.Update(dt);
+
+		const auto plankPts = plank.GetPoints();
+
+		for (auto& b : balls)
+		{
+			const float radSq = 4.0 * (ball.GetRadius()) * (ball.GetRadius());
+			const float distance = (b.GetPos() - ball.GetPos()).LengthSq();
+			if (b.GetPos() != ball.GetPos() && distance <= radSq)
+			{
+				ball.SetColor(Colors::Cyan);
+				b.SetColor(Colors::Cyan);
+			}
+		}
+
+		if (DistancePointToLine(plankPts.first, plankPts.second, ball.GetPos()) < ball.GetRadius() && NormalToLine(plankPts.first, plankPts.second) * ball.GetVel() > 0.0f)
+		{
+			ball.SetColor(Colors::Green);
+			const Vef2 w = plank.GetPlankSurfaceVector().GetNormalized();
+			const Vef2 v = ball.GetVel();
+			ball.SetVel((w * (v * w)) * 2.0f - v);
+		}
+
 	}
+	spwaner.Update(dt);
+
+	const auto newEnd = std::remove_if(balls.begin(), balls.end(), [this](const Ball& ball) {return ball.GetPos().LengthSq() > maxBallDist * maxBallDist; });
+	balls.erase(newEnd, balls.end());
 }
 
 void Game::ComposeFrame()
 {
-	const RectF vp = cam.GetViewPort();
-	for (auto& e : stars)
+	cam.Draw(plank.GetDrawable());
+	
+	for (auto& ball : balls)
 	{
-		if (e.GetRect().IsOverLappingWith(vp))
-		{
-			cam.Draw(e.GetDrawable());
-		}
+		cam.Draw(ball.GetDrawable());
 	}
 }

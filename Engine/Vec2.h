@@ -67,14 +67,9 @@ public:
 		return *this = *this / scaler;
 	}
 
-	Vec2 operator*(const Vec2& rhs) const
+	T operator*(const Vec2& rhs)const
 	{
-		return Vec2(x * rhs.x, y * rhs.y);
-	}
-
-	Vec2& operator*=(const Vec2& rhs)
-	{
-		return *this = *this * rhs;
+		return x * rhs.x + y * rhs.y;
 	}
 
 	bool operator==(const Vec2& rhs) const

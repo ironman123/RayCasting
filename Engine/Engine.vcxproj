@@ -138,12 +138,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamMouseCtrl.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="ChiliException.h" />
+    <ClInclude Include="ChiliMath.h" />
     <ClInclude Include="ChiliWin.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="CoordinateTransformer.h" />
     <ClInclude Include="Drawable.h" />
@@ -155,10 +158,11 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="Plank.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Spwaner.h" />
     <ClInclude Include="Star.h" />
-    <ClInclude Include="StarBro.h" />
     <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <ItemGroup>

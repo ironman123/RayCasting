@@ -22,6 +22,4 @@ public:
 		}
 		return star;
 	}
-private:
-
 };

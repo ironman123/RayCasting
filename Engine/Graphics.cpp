@@ -264,17 +264,110 @@ void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 	const float xDiff = ((float)p2.x - (float)p1.x);
 	const float yDiff = ((float)p2.y - (float)p1.y);
 	const Color cellColor = Color{ 90,0,210 };
+	
+	m = yDiff / xDiff;
 
-	if (p1.x != p2.x)
+	if (std::abs(m) <= 1.0f)
 	{
-		m = yDiff / xDiff;
-
-		if (std::abs(m) <= 1.0f)
+		if (p1.x > p2.x)
 		{
-			if (p1.x > p2.x)
+			std::swap(p1, p2);
+		}
+		const float b = p2.y - (m * p2.x);
+
+		for (int x = (int)p1.x; x <= (int)p2.x; x++)
+		{
+			const float y = (m * (float)x) + b;
+			//Screen clipping
+			if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
 			{
-				std::swap(p1, p2);
+				PutPixel(x, (int)y, c);
 			}
+		}
+	}
+	else
+	{
+		if (p1.y > p2.y)
+		{
+			std::swap(p1, p2);
+		}
+		const float w = xDiff / yDiff;
+		const float p = p2.x - (w * p2.y);
+
+		for (int y = (int)p1.y; y <= (int)p2.y; y++)
+		{
+			const float x = (w * (float)y) + p;
+			//Screen clipping
+			if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
+			{
+				PutPixel((int)x, y, c);
+			}
+		}
+	}
+	
+}
+
+void Graphics::DrawLineDDA(Vei2 p1, Vei2 p2, Color c)
+{
+	const Color cellColor = Color{ 90,0,210 };
+	const float xDiff = ((float)p2.x - (float)p1.x);
+	const float yDiff = ((float)p2.y - (float)p1.y);
+	float step = abs(xDiff) > abs(yDiff) ? abs(xDiff) : abs(yDiff);
+
+	float incX = xDiff / step;
+	float incY = yDiff / step;
+
+	float X = (float)p1.x;
+	float Y = (float)p1.y;
+
+	for (int i = 0; i <= (int)step; i++)
+	{
+
+		//if (GetColor(Vei2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
+		//{
+		//	break;
+		//	X += incX;
+		//	Y += incY;
+		//}
+		//else
+		//{
+		//	PutPixel(ROUNDNUM(X), ROUNDNUM(Y), c);
+		//}
+
+		PutPixel(round(X), round(Y), c);
+		
+		X += incX;
+		Y += incY;
+	}
+	
+}
+
+void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
+{
+	float m = 0.0f;
+	const float xDiff = ((float)p2.x - (float)p1.x);
+	const float yDiff = ((float)p2.y - (float)p1.y);
+	const Color cellColor = Color{ 90,0,210 };
+
+	m = yDiff / xDiff;
+
+	if (std::abs(m) <= 1.0f)
+	{
+		const float b = p2.y - (m * p2.x);
+		if (p1.x > p2.x)
+		{
+			for (int x = (int)p1.x; x >= (int)p2.x; x--)
+			{
+				const float y = (m * (float)x) + b;
+				//Screen clipping
+				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
+				{
+					PutPixel(x, (int)y, c);
+				}
+			}
+		}
+		else
+		{
 			const float b = p2.y - (m * p2.x);
 
 			for (int x = (int)p1.x; x <= (int)p2.x; x++)
@@ -287,12 +380,25 @@ void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 				}
 			}
 		}
+	}
+	else
+	{
+		if (p1.y > p2.y)
+		{
+			const float w = xDiff / yDiff;
+			const float p = p2.x - (w * p2.y);
+			for (int y = (int)p1.y; y >= (int)p2.y; y--)
+			{
+				const float x = (w * (float)y) + p;
+				//Screen clipping
+				if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
+				{
+					PutPixel((int)x, y, c);
+				}
+			}
+		}
 		else
 		{
-			if (p1.y > p2.y)
-			{
-				std::swap(p1, p2);
-			}
 			const float w = xDiff / yDiff;
 			const float p = p2.x - (w * p2.y);
 
@@ -309,126 +415,14 @@ void Graphics::DrawLine(Vef2 p1, Vef2 p2, Color c)
 	}
 }
 
-void Graphics::DrawLineDDA(Vei2 p1, Vei2 p2, Color c)
-{
-	const Color cellColor = Color{ 90,0,210 };
-	const float xDiff = ((float)p2.x - (float)p1.x);
-	const float yDiff = ((float)p2.y - (float)p1.y);
-	if (p1.x != p2.x)
-	{
-		float step = abs(xDiff) > abs(yDiff) ? abs(xDiff) : abs(yDiff);
-
-		float incX = xDiff / step;
-		float incY = yDiff / step;
-
-		float X = (float)p1.x;
-		float Y = (float)p1.y;
-
-		for (int i = 0; i <= (int)step; i++)
-		{
-
-			//if (GetColor(Vei2(ROUNDNUM(X), ROUNDNUM(Y))) == cellColor)
-			//{
-			//	break;
-			//	X += incX;
-			//	Y += incY;
-			//}
-			//else
-			//{
-			//	PutPixel(ROUNDNUM(X), ROUNDNUM(Y), c);
-			//}
-
-			PutPixel(round(X), round(Y), c);
-			
-			X += incX;
-			Y += incY;
-		}
-	}
-}
-
-void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
-{
-	float m = 0.0f;
-	const float xDiff = ((float)p2.x - (float)p1.x);
-	const float yDiff = ((float)p2.y - (float)p1.y);
-	const Color cellColor = Color{ 90,0,210 };
-
-	if (p1.x != p2.x)
-	{
-		m = yDiff / xDiff;
-
-		if (std::abs(m) <= 1.0f)
-		{
-			const float b = p2.y - (m * p2.x);
-			if (p1.x > p2.x)
-			{
-				for (int x = (int)p1.x; x >= (int)p2.x; x--)
-				{
-					const float y = (m * (float)x) + b;
-					//Screen clipping
-					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
-					{
-						PutPixel(x, (int)y, c);
-					}
-				}
-			}
-			else
-			{
-				const float b = p2.y - (m * p2.x);
-
-				for (int x = (int)p1.x; x <= (int)p2.x; x++)
-				{
-					const float y = (m * (float)x) + b;
-					//Screen clipping
-					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
-					{
-						PutPixel(x, (int)y, c);
-					}
-				}
-			}
-		}
-		else
-		{
-			if (p1.y > p2.y)
-			{
-				const float w = xDiff / yDiff;
-				const float p = p2.x - (w * p2.y);
-				for (int y = (int)p1.y; y >= (int)p2.y; y--)
-				{
-					const float x = (w * (float)y) + p;
-					//Screen clipping
-					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
-					{
-						PutPixel((int)x, y, c);
-					}
-				}
-			}
-			else
-			{
-				const float w = xDiff / yDiff;
-				const float p = p2.x - (w * p2.y);
-
-				for (int y = (int)p1.y; y <= (int)p2.y; y++)
-				{
-					const float x = (w * (float)y) + p;
-					//Screen clipping
-					if (x > 0 && x < Graphics::ScreenWidth && (int)y > 0 && (int)y < Graphics::ScreenHeight)
-					{
-						PutPixel((int)x, y, c);
-					}
-				}
-			}
-		}
-	}
-}
-
 void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& translation, float scaleX, float scaleY, Color c)
 {
 	const Vef2 scale = { scaleX, scaleY };
 	
 	const auto xForm = [&](Vef2 v)
 	{
-		v *= scale;
+		v.x *= scale.x;
+		v.y *= scale.y;
 		v += translation;
 		return v;
 	};

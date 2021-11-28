@@ -45,6 +45,11 @@ public:
 		
 		return d;
 	}
+protected:
+	void SetModel(std::vector<Vef2> model_in)
+	{
+		model = std::move(model_in);
+	}
 private:
 	Color c;
 	float scale = 1.0f;
