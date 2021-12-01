@@ -33,8 +33,8 @@ Game::Game(MainWindow& wnd)
 	ct(gfx),
 	cam(ct),
 	camCtrl(cam,wnd.mouse),
-	plank({ 180.0f,150.0f }, -240.0f, -300.0f, 300.0f),
-	spwaner(balls, radius, Vef2{ 0.0f,-180.0f }, 84.0f, -12.0f, 12.0f, 0.5f)
+	plank({ 180.0f,150.0f }, -240.0f, -270.0f, 300.0f),
+	spwaner(balls, radius, Vef2{ 0.0f,-180.0f }, 75.0f, -12.0f, 12.0f, 1.9f)
 {
 	
 }
@@ -61,32 +61,96 @@ void Game::UpdateModel()
 		plank.MoveFreeY(2.0f);
 	}
 
-	for (auto& ball : balls)
+	if (wnd.kbd.KeyIsPressed(VK_SHIFT))
 	{
-		ball.Update(dt);
+		balls.erase(balls.begin(), balls.end());
+	}
+
+	if (wnd.kbd.KeyIsPressed(VK_SPACE))
+	{
+		spwaner.BallPairSpwaner(dt);
+	}
+
+	for (size_t i = 0; i < balls.size(); ++i)
+	{
+		balls[i].Update(dt);
 
 		const auto plankPts = plank.GetPoints();
 
-		for (auto& b : balls)
+		for (size_t j = 0; j < balls.size(); ++j)
 		{
-			const float distance = (b.GetPos() - ball.GetPos()).LengthSq();
-			if (b.GetPos() != ball.GetPos() && distance <= sq(minBallColDist))
+			if (i == j)
 			{
-				ball.SetColor(Colors::Cyan);
-				b.SetColor(Colors::Cyan);
+				continue;
+			}
+			const Vef2 bP1 = balls[i].GetPos();
+			const Vef2 bP2 = balls[j].GetPos();
+			const Vef2 ballVec = bP2 - bP1;
+
+			const float distance = ballVec.LengthSq();
+			if (distance <= sq(minBallColDist))
+			{
+				balls[i].SetColor(Colors::Cyan);
+				balls[j].SetColor(Colors::Cyan);
+
+				const Vef2 n = -NormalToLine(bP2, bP1);
+				const Vef2 vB1 = balls[i].GetVel();
+				const Vef2 vB2 = balls[j].GetVel();
+
+				const Vef2 relVel = (vB2 - vB1);
+				const Vef2 relNormalVel = relVel.GetNormalized();
+
+				const auto roots = GetQuadraticRoots(1.0f, 2.0f * (ballVec * relNormalVel), (ballVec * ballVec) - deltaRadSq);
+
+				//const float dBV = (roots.first < roots.second ? roots.first : roots.second);
+				const float dBV = std::abs(std::min(roots.first, roots.second));
+				
+				const float dB1 = (dBV * (vB1.Length())) / relVel.Length();
+				const float dB2 = (dBV * (vB2.Length())) / relVel.Length();
+
+				const Vef2 dAdjustB1 = vB1.GetNormalized() * dB1;
+				const Vef2 dAdjustB2 = vB2.GetNormalized() * dB2;
+
+				//distance b/w balls before adjustment test
+				const auto a = (balls[j].GetPos() - balls[i].GetPos()).Length();
+
+				balls[i].TranslateBy(-dAdjustB1);
+				balls[j].TranslateBy(-dAdjustB2);
+
+				//distance b/w balls after adjustment test
+				const auto b = (balls[j].GetPos() - balls[i].GetPos()).Length();
+
+				const Vef2 n2 = NormalToLine(balls[i].GetPos(), balls[j].GetPos());
+
+				const Vef2 newVB1 = (n2 * (vB1 * n2)) * 2.0f - vB1;
+				const Vef2 newVB2 = (n2 * (vB2 * n2)) * 2.0f - vB2;
+
+				const Vef2 newDAdjustB1 = newVB1.GetNormalized() * dB1;
+				const Vef2 newDAdjustB2 = newVB2.GetNormalized() * dB2;
+
+				balls[i].TranslateBy(newDAdjustB1);
+				balls[j].TranslateBy(newDAdjustB2);
+
+				//distance b/w balls after second adjustment test
+				const auto c = (balls[j].GetPos() - balls[i].GetPos()).Length();
+
+				balls[i].SetVel(newVB1);
+				balls[j].SetVel(newVB2);
+				
 			}
 		}
 
-		if (DistancePointToLine(plankPts.first, plankPts.second, ball.GetPos()) < ball.GetRadius() && NormalToLine(plankPts.first, plankPts.second) * ball.GetVel() > 0.0f)
+		if (DistancePointToLine(plankPts.first, plankPts.second, balls[i].GetPos()) < balls[i].GetRadius() && NormalToLine(plankPts.first, plankPts.second) * balls[i].GetVel() > 0.0f)
 		{
-			ball.SetColor(Colors::Green);
+			balls[i].SetColor(Colors::Green);
 			const Vef2 w = plank.GetPlankSurfaceVector().GetNormalized();
-			const Vef2 v = ball.GetVel();
-			ball.SetVel((w * (v * w)) * 2.0f - v);
+			const Vef2 v = balls[i].GetVel();
+			//balls[i].SetVel((w * (v * w)) * 2.0f - v);
 		}
 
 	}
-	spwaner.Update(dt);
+	spwaner.BallPairSpwaner(dt);
+	//spwaner.Update(dt);
 
 	const auto newEnd = std::remove_if(balls.begin(), balls.end(), [this](const Ball& ball) {return ball.GetPos().LengthSq() > maxBallDist * maxBallDist; });
 	balls.erase(newEnd, balls.end());
