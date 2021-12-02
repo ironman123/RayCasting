@@ -34,9 +34,8 @@ Game::Game(MainWindow& wnd)
 	cam(ct),
 	camCtrl(cam,wnd.mouse),
 	plank({ 180.0f,150.0f }, -240.0f, -270.0f, 300.0f),
-	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -50.0f, -12.0f, 12.0f, 1.9f)
+	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -50.0f, -12.0f, 12.0f, 1.8f)
 {
-
 }
 
 void Game::Go()
@@ -86,15 +85,18 @@ void Game::UpdateModel()
 			const Vef2 bP1 = balls[i].GetPos();
 			const Vef2 bP2 = balls[j].GetPos();
 			const Vef2 ballVec = bP2 - bP1;
-			const Vef2 normalBallVec = ballVec.GetNormalized();
+			
 
 			const float distance = ballVec.LengthSq();
 			if (distance <= sq(minBallColDist))
 			{
+				const Vef2 normalBallVec = ballVec.GetNormalized();
+
+				//Collision Color Set
 				balls[i].SetColor(Colors::Cyan);
 				balls[j].SetColor(Colors::Cyan);
 
-				const Vef2 n = -NormalToLine(bP2, bP1);
+				//const Vef2 n = -NormalToLine(bP2, bP1);
 				const Vef2 vB1 = balls[i].GetVel();
 				const Vef2 vB2 = balls[j].GetVel();
 
@@ -104,6 +106,7 @@ void Game::UpdateModel()
 				const auto roots = GetQuadraticRoots(1.0f, 2.0f * (ballVec * relNormalVel), (ballVec * ballVec) - deltaRadSq);
 
 				//const float dBV = (roots.first < roots.second ? roots.first : roots.second);
+				//relative distance traveled by each ball
 				const float dBV = std::abs(std::min(roots.first, roots.second)) / relVel.Length();
 				
 				const float dB1 = dBV * (vB1.Length());
