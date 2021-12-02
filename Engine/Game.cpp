@@ -104,10 +104,10 @@ void Game::UpdateModel()
 				const auto roots = GetQuadraticRoots(1.0f, 2.0f * (ballVec * relNormalVel), (ballVec * ballVec) - deltaRadSq);
 
 				//const float dBV = (roots.first < roots.second ? roots.first : roots.second);
-				const float dBV = std::abs(std::min(roots.first, roots.second));
+				const float dBV = std::abs(std::min(roots.first, roots.second)) / relVel.Length();
 				
-				const float dB1 = (dBV * (vB1.Length())) / relVel.Length();
-				const float dB2 = (dBV * (vB2.Length())) / relVel.Length();
+				const float dB1 = dBV * (vB1.Length());
+				const float dB2 = dBV * (vB2.Length());
 
 				const Vef2 dAdjustB1 = vB1.GetNormalized() * dB1;
 				const Vef2 dAdjustB2 = vB2.GetNormalized() * dB2;

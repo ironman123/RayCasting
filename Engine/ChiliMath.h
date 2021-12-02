@@ -8,23 +8,25 @@ auto sq(T x)
 	return x * x;
 }
 
-inline auto GetS(float a, float b, float c)
+template <typename T>
+auto GetS(T a, T b, T c)
 {
 	return sq(b) - (4.0f * a * c);
 }
 
-inline auto GetQuadraticRoots(float a, float b, float c)
+template <typename T>
+auto GetQuadraticRoots(T a, T b, T c)
 {
-	const float B = std::sqrt(GetS(a,b,c)) / (2.0f * a);
+	const T B = std::sqrt(GetS(a,b,c)) / (2.0f * a);
 	if (B < 0.0f)
 	{
 		return std::make_pair(0.0f, 0.0f);
 	}
 	else
 	{
-		const float A = -b / (2.0f * a);
-		const float x1 = A + B;
-		const float x2 = A - B;
+		const T A = -b / (2.0f * a);
+		const T x1 = A + B;
+		const T x2 = A - B;
 
 		return std::make_pair(x1, x2);
 	}
