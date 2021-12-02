@@ -78,3 +78,25 @@ Vec2<T> NormalToLine(const Vec2<T>& l0, const Vec2<T>& l1)
 		return Vec2<T>{dy, -dx}.Normalize();
 	}
 }
+
+template <typename T>
+Vec2<T> NormalToPointFromLine(const Vec2<T>& l0, const Vec2<T>& l1, const Vec2<T>& p)
+{
+	const float dy = l1.y - l0.y;
+	const float dx = l1.x - l0.x;
+	if (dy == (T)0)
+	{
+		return Vec2<T>{(T)0, p.y > l0.y ? (T)1 : (T)-1};
+	}
+	else if (dx == (T)0)
+	{
+		return Vec2<T>{p.x > l0.x ? (T)1 : (T)-1, (T)0};
+	}
+	else
+	{
+		const auto lineVec = (l1 - l0).Normalize();
+		const auto lineComponentofP = lineVec * (p * lineVec);
+
+		return (p - lineComponentofP).Normalize();
+	}
+}
