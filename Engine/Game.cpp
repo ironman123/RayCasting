@@ -34,7 +34,7 @@ Game::Game(MainWindow& wnd)
 	cam(ct),
 	camCtrl(cam,wnd.mouse),
 	plank({ 180.0f,150.0f }, -240.0f, -270.0f, 300.0f),
-	spwaner(balls, radius, Vef2{ 0.0f,-180.0f }, 75.0f, -12.0f, 12.0f, 1.9f)
+	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -75.0f, -12.0f, 12.0f, 1.9f)
 {
 	
 }
@@ -86,6 +86,7 @@ void Game::UpdateModel()
 			const Vef2 bP1 = balls[i].GetPos();
 			const Vef2 bP2 = balls[j].GetPos();
 			const Vef2 ballVec = bP2 - bP1;
+			const Vef2 normalBallVec = ballVec.GetNormalized();
 
 			const float distance = ballVec.LengthSq();
 			if (distance <= sq(minBallColDist))
@@ -112,18 +113,20 @@ void Game::UpdateModel()
 				const Vef2 dAdjustB2 = vB2.GetNormalized() * dB2;
 
 				//distance b/w balls before adjustment test
-				const auto a = (balls[j].GetPos() - balls[i].GetPos()).Length();
+				//const auto a = (balls[j].GetPos() - balls[i].GetPos()).Length();
 
 				balls[i].TranslateBy(-dAdjustB1);
 				balls[j].TranslateBy(-dAdjustB2);
 
 				//distance b/w balls after adjustment test
-				const auto b = (balls[j].GetPos() - balls[i].GetPos()).Length();
+				//const auto b = (balls[j].GetPos() - balls[i].GetPos()).Length();
 
-				const Vef2 n2 = NormalToLine(balls[i].GetPos(), balls[j].GetPos());
+				//const Vef2 n2 = NormalToLine(balls[i].GetPos(), balls[j].GetPos());
 
-				const Vef2 newVB1 = (n2 * (vB1 * n2)) * 2.0f - vB1;
-				const Vef2 newVB2 = (n2 * (vB2 * n2)) * 2.0f - vB2;
+				const Vef2 changedRelativeVel = normalBallVec * (relVel * normalBallVec);
+
+				const Vef2 newVB1 = vB1 + changedRelativeVel;
+				const Vef2 newVB2 = vB2 - changedRelativeVel;
 
 				const Vef2 newDAdjustB1 = newVB1.GetNormalized() * dB1;
 				const Vef2 newDAdjustB2 = newVB2.GetNormalized() * dB2;
@@ -132,7 +135,7 @@ void Game::UpdateModel()
 				balls[j].TranslateBy(newDAdjustB2);
 
 				//distance b/w balls after second adjustment test
-				const auto c = (balls[j].GetPos() - balls[i].GetPos()).Length();
+				//const auto c = (balls[j].GetPos() - balls[i].GetPos()).Length();
 
 				balls[i].SetVel(newVB1);
 				balls[j].SetVel(newVB2);
@@ -140,12 +143,19 @@ void Game::UpdateModel()
 			}
 		}
 
-		if (DistancePointToLine(plankPts.first, plankPts.second, balls[i].GetPos()) < balls[i].GetRadius() && NormalToLine(plankPts.first, plankPts.second) * balls[i].GetVel() > 0.0f)
+		const Vef2 plankThickenss = Vef2{ 0.0f,plank.GetPlankThiccness() };
+
+		if (DistancePointToLine(plankPts.first, plankPts.second, balls[i].GetPos()) < balls[i].GetRadius() ||
+			DistancePointToLine(plankPts.first + plankThickenss, plankPts.second + plankThickenss, balls[i].GetPos()) < balls[i].GetRadius())
+			//&& NormalToLine(plankPts.first, plankPts.second) * balls[i].GetVel() > 0.0f 
+			//&& NormalToLine(plankPts.second, plankPts.first) * balls[i].GetVel() > 0.0f)
 		{
 			balls[i].SetColor(Colors::Green);
 			const Vef2 w = plank.GetPlankSurfaceVector().GetNormalized();
+			const Vef2 m = -plank.GetPlankSurfaceVector().GetNormalized();
 			const Vef2 v = balls[i].GetVel();
-			//balls[i].SetVel((w * (v * w)) * 2.0f - v);
+			balls[i].SetVel((w * (v * w)) * 2.0f - v);
+			balls[i].SetVel((m * (v * m)) * 2.0f - v);
 		}
 
 	}

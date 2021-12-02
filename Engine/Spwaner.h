@@ -33,14 +33,14 @@ public:
 			time -= spwanPeriod;
 
 			//vertical
-			//balls.emplace_back(Vef2{ 0.0f,-180.0f }, radius, Vef2{ 0.0f,20.0f });
-			//balls.emplace_back(Vef2{ 0.0f,180.0f }, radius, Vef2{ 0.0f,-20.0f });
+			balls.emplace_back(Vef2{ 0.0f,-180.0f }, radius, Vef2{ 0.0f,60.0f });
+			balls.emplace_back(Vef2{ 0.0f,180.0f }, radius, Vef2{ 0.0f,-60.0f });
 			//horizontal
-			//balls.emplace_back(Vef2{ -180.0f,0.0f }, radius, Vef2{ 50.0f,0.0f });
+			balls.emplace_back(Vef2{ -180.0f,0.0f }, radius, Vef2{ 50.0f,0.0f });
 			balls.emplace_back(Vef2{ 180.0f,0.0f }, radius, Vef2{ -50.0f,0.0f });
 			//Diagonal Spwan 
-			//balls.emplace_back(Vef2{ -180.0f,-180.0f }, radius, Vef2{ 50.0f,50.0f });
-			balls.emplace_back(Vef2{ 180.0f,180.0f }, radius,  Vef2{ -50.0f,-50.0f });  
+			balls.emplace_back(Vef2{ -180.0f,-180.0f }, radius, Vef2{ 150.0f,50.0f });
+			balls.emplace_back(Vef2{ 180.0f,180.0f }, radius,  Vef2{ -150.0f,-50.0f });  
 			////L shape Spwan
 			//balls.emplace_back(Vef2{ 0.0f,180.0f }, radius, Vef2{ 0.0f,-150.0f });
 			//balls.emplace_back(Vef2{ -180.0f,0.0f }, radius, Vef2{ 150.0f,0.0f });

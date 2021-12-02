@@ -44,6 +44,10 @@ public:
 	{
 		return -freePtModel;
 	}
+	float GetPlankThiccness()const
+	{
+		return fatness;
+	}
 	auto GetPoints()const
 	{
 		return std::make_pair(GetPos(), GetFreePt());
