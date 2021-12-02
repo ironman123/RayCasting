@@ -34,9 +34,9 @@ Game::Game(MainWindow& wnd)
 	cam(ct),
 	camCtrl(cam,wnd.mouse),
 	plank({ 180.0f,150.0f }, -240.0f, -270.0f, 300.0f),
-	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -75.0f, -12.0f, 12.0f, 1.9f)
+	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -50.0f, -12.0f, 12.0f, 1.9f)
 {
-	
+
 }
 
 void Game::Go()
@@ -144,18 +144,23 @@ void Game::UpdateModel()
 		}
 
 		const Vef2 plankThickenss = Vef2{ 0.0f,plank.GetPlankThiccness() };
+		const float bottomDist = DistancePointToLine(plankPts.first, plankPts.second, balls[i].GetPos());
+		const float topDist = DistancePointToLine(plankPts.first + plankThickenss, plankPts.second + plankThickenss, balls[i].GetPos());
 
-		if (DistancePointToLine(plankPts.first, plankPts.second, balls[i].GetPos()) < balls[i].GetRadius() ||
-			DistancePointToLine(plankPts.first + plankThickenss, plankPts.second + plankThickenss, balls[i].GetPos()) < balls[i].GetRadius())
-			//&& NormalToLine(plankPts.first, plankPts.second) * balls[i].GetVel() > 0.0f 
-			//&& NormalToLine(plankPts.second, plankPts.first) * balls[i].GetVel() > 0.0f)
+		if (bottomDist < balls[i].GetRadius() || topDist < balls[i].GetRadius())
 		{
-			balls[i].SetColor(Colors::Green);
 			const Vef2 w = plank.GetPlankSurfaceVector().GetNormalized();
 			const Vef2 m = -plank.GetPlankSurfaceVector().GetNormalized();
+
+			const Vef2 distAdjust = (-balls[i].GetVel().GetNormalized()) * 2.0f * (balls[i].GetRadius() - std::min(bottomDist, topDist));
+
+			balls[i].TranslateBy(distAdjust);
+
+			balls[i].SetColor(Colors::Green);
+			
 			const Vef2 v = balls[i].GetVel();
-			balls[i].SetVel((w * (v * w)) * 2.0f - v);
-			balls[i].SetVel((m * (v * m)) * 2.0f - v);
+			//balls[i].SetVel(((w * (v * w)) * 2.0f - v) + w * 4.0f);
+			balls[i].SetVel(((m * (v * m)) * 2.0f - v) + m * 4.0f);
 		}
 
 	}
