@@ -52,6 +52,20 @@ public:
 	{
 		return std::make_pair(GetPos(), GetFreePt());
 	}
+
+	float GetRadius() const override
+	{
+		return 0.0f;
+	}
+	Vef2 GetVel() const override
+	{
+		return Vef2{ 0.0f,0.0f };
+	}
+	void SetVel(const Vef2& val) override
+	{
+
+	}
+
 private:
 	float fatness;
 	float minFreeYModel;

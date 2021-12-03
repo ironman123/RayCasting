@@ -45,6 +45,13 @@ public:
 		
 		return d;
 	}
+/********************************/
+//virtual Functions Start
+	virtual float GetRadius()const = 0;
+	virtual Vef2 GetVel()const =  0;
+	virtual void SetVel(const Vef2& vel_in) = 0;
+//virtual Functions End
+/********************************/
 protected:
 	void SetModel(std::vector<Vef2> model_in)
 	{

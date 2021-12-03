@@ -14,15 +14,15 @@ public:
 		vel(vel)
 	{
 	}
-	float GetRadius()const
+	float GetRadius() const override
 	{
 		return radius;
 	}
-	Vef2 GetVel()const
+	Vef2 GetVel() const override
 	{
 		return vel;
 	}
-	void SetVel(const Vef2& vel_in)
+	void SetVel(const Vef2& vel_in) override
 	{
 		vel = vel_in;
 	}
