@@ -23,7 +23,6 @@ inline void DoBallCollision(Entity* e0, Entity* e1)
 		e0->SetColor(Colors::Cyan);
 		e1->SetColor(Colors::Cyan);
 
-		//const Vef2 n = -NormalToLine(bP2, bP1);
 		const Vef2 vB1 = e0->GetVel();
 		const Vef2 vB2 = e1->GetVel();
 
@@ -32,27 +31,20 @@ inline void DoBallCollision(Entity* e0, Entity* e1)
 
 		const auto roots = GetQuadraticRoots(1.0f, 2.0f * (ballVec * relNormalVel), (ballVec * ballVec) - (b1_dia * b2_dia));
 
-		//const float dBV = (roots.first < roots.second ? roots.first : roots.second);
 		//relative distance traveled by each ball
 		const float dBV = std::abs(roots.first < roots.second ? roots.first : roots.second) / relVel.Length();
 
+		//actual distance traveled by each ball
 		const float dB1 = dBV * (vB1.Length());
 		const float dB2 = dBV * (vB2.Length());
 
 		const Vef2 dAdjustB1 = vB1.GetNormalized() * dB1;
 		const Vef2 dAdjustB2 = vB2.GetNormalized() * dB2;
 
-		//distance b/w balls before adjustment test
-		//const auto a = (e1.GetPos() - e0.GetPos()).Length();
-
 		e0->TranslateBy(-dAdjustB1);
 		e1->TranslateBy(-dAdjustB2);
 
-		//distance b/w balls after adjustment test
-		//const auto b = (e1.GetPos() - e0.GetPos()).Length();
-
-		//const Vef2 n2 = NormalToLine(e0.GetPos(), e1.GetPos());
-
+		//relVel * normalBallVec will always give -ve valuse try and calculate
 		const Vef2 changedRelativeVel = normalBallVec * (relVel * normalBallVec);
 
 		const Vef2 newVB1 = vB1 + changedRelativeVel;
@@ -64,10 +56,19 @@ inline void DoBallCollision(Entity* e0, Entity* e1)
 		e0->TranslateBy(newDAdjustB1);
 		e1->TranslateBy(newDAdjustB2);
 
-		//distance b/w balls after second adjustment test
-		//const auto c = (e1.GetPos() - e0.GetPos()).Length();
-
 		e0->SetVel(newVB1);
 		e1->SetVel(newVB2);
 	}
+}
+
+template <typename T>
+inline void DoBoundaryCollision(const std::pair<Vec2<T>, Vec2<T>> points, Entity* e)
+{
+	const Vef2 w = NormalToPointFromLine(points.first, points.second, e->GetPos());
+
+	e->SetColor(Colors::Green);
+	const Vef2 v = e->GetVel();
+	//const Vef2 distAdjust = (-e->GetVel().GetNormalized()) * 2.0f * (e.GetRadius() - std::min(bottomDist, topDist));
+
+	e->SetVel(v - w * (2.0f * (w * v)));
 }

@@ -92,18 +92,7 @@ void Game::UpdateModel()
 
 		if (bottomDist < balls[i].GetRadius() || topDist < balls[i].GetRadius())
 		{
-			const Vef2 w = plank.GetPlankSurfaceVector().GetNormalized();
-			const Vef2 m = -plank.GetPlankSurfaceVector().GetNormalized();
-
-			const Vef2 distAdjust = (-balls[i].GetVel().GetNormalized()) * 2.0f * (balls[i].GetRadius() - std::min(bottomDist, topDist));
-
-			balls[i].TranslateBy(distAdjust);
-
-			balls[i].SetColor(Colors::Green);
-			
-			const Vef2 v = balls[i].GetVel();
-			//balls[i].SetVel(((w * (v * w)) * 2.0f - v) + w * 4.0f);
-			balls[i].SetVel(((m * (v * m)) * 2.0f - v) + m * 4.0f);
+			DoBoundaryCollision(std::make_pair(plankPts.first, plankPts.second), &balls[i]);
 		}
 
 	}
