@@ -24,6 +24,7 @@
 #include "Star.h"
 #include <algorithm>
 #include "ChiliMath.h"
+#include "ChiliPhysics.h"
 
 Game::Game(MainWindow& wnd)
 	:
@@ -82,68 +83,7 @@ void Game::UpdateModel()
 			{
 				continue;
 			}
-			const Vef2 bP1 = balls[i].GetPos();
-			const Vef2 bP2 = balls[j].GetPos();
-			const Vef2 ballVec = bP2 - bP1;
-			
-
-			const float distance = ballVec.LengthSq();
-			if (distance <= sq(minBallColDist))
-			{
-				const Vef2 normalBallVec = ballVec.GetNormalized();
-
-				//Collision Color Set
-				balls[i].SetColor(Colors::Cyan);
-				balls[j].SetColor(Colors::Cyan);
-
-				//const Vef2 n = -NormalToLine(bP2, bP1);
-				const Vef2 vB1 = balls[i].GetVel();
-				const Vef2 vB2 = balls[j].GetVel();
-
-				const Vef2 relVel = (vB2 - vB1);
-				const Vef2 relNormalVel = relVel.GetNormalized();
-
-				const auto roots = GetQuadraticRoots(1.0f, 2.0f * (ballVec * relNormalVel), (ballVec * ballVec) - deltaRadSq);
-
-				//const float dBV = (roots.first < roots.second ? roots.first : roots.second);
-				//relative distance traveled by each ball
-				const float dBV = std::abs(std::min(roots.first, roots.second)) / relVel.Length();
-				
-				const float dB1 = dBV * (vB1.Length());
-				const float dB2 = dBV * (vB2.Length());
-
-				const Vef2 dAdjustB1 = vB1.GetNormalized() * dB1;
-				const Vef2 dAdjustB2 = vB2.GetNormalized() * dB2;
-
-				//distance b/w balls before adjustment test
-				//const auto a = (balls[j].GetPos() - balls[i].GetPos()).Length();
-
-				balls[i].TranslateBy(-dAdjustB1);
-				balls[j].TranslateBy(-dAdjustB2);
-
-				//distance b/w balls after adjustment test
-				//const auto b = (balls[j].GetPos() - balls[i].GetPos()).Length();
-
-				//const Vef2 n2 = NormalToLine(balls[i].GetPos(), balls[j].GetPos());
-
-				const Vef2 changedRelativeVel = normalBallVec * (relVel * normalBallVec);
-
-				const Vef2 newVB1 = vB1 + changedRelativeVel;
-				const Vef2 newVB2 = vB2 - changedRelativeVel;
-
-				const Vef2 newDAdjustB1 = newVB1.GetNormalized() * dB1;
-				const Vef2 newDAdjustB2 = newVB2.GetNormalized() * dB2;
-
-				balls[i].TranslateBy(newDAdjustB1);
-				balls[j].TranslateBy(newDAdjustB2);
-
-				//distance b/w balls after second adjustment test
-				//const auto c = (balls[j].GetPos() - balls[i].GetPos()).Length();
-
-				balls[i].SetVel(newVB1);
-				balls[j].SetVel(newVB2);
-				
-			}
+			DoBallCollision(&balls[i], &balls[j]);
 		}
 
 		const Vef2 plankThickenss = Vef2{ 0.0f,plank.GetPlankThiccness() };
