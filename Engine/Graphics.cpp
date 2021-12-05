@@ -415,14 +415,21 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 	}
 }
 
-void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& translation, float scaleX, float scaleY, Color c)
+void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& translation, float scaleX, float scaleY, float rotation,Color c)
 {
-	const Vef2 scale = { scaleX, scaleY };
+	const float sin = std::sin(rotation);
+	const float cos = std::cos(rotation);
 	
 	const auto xForm = [&](Vef2 v)
 	{
-		v.x *= scale.x;
-		v.y *= scale.y;
+		//rotation
+		const float new_x = v.x * cos - v.y * sin;
+		v.y = v.x * sin + v.y * cos;
+		v.x = new_x;
+		//scaling
+		v.x *= scaleX;
+		v.y *= scaleY;
+		//translation
 		v += translation;
 		return v;
 	};

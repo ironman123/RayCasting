@@ -2,6 +2,9 @@
 #include <cmath>
 #include "Vec2.h"
 
+constexpr double PI_D = 3.141592653589793238462643383279;
+constexpr float PI = (float)PI_D;	
+
 template <typename T>
 auto sq(T x)
 {
@@ -104,7 +107,7 @@ Vec2<T> NormalToPointFromLine(const Vec2<T>& l0, const Vec2<T>& l1, const Vec2<T
 }
 
 template <typename T>
-Vec2<T> RotateVec(const Vec2<T>& vec, float radRotation)
+Vec2<T> GetRotatedVec(const Vec2<T>& vec, float radRotation)
 {
 	const float sin = std::sin(radRotation);
 	const float cos = std::cos(radRotation);

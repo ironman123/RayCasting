@@ -22,6 +22,11 @@ public:
 		scaleX *= scale_in;
 		scaleY *= scale_in;
 	}
+	void RotateBy(float radians)
+	{
+		rotation += radians;
+		translation.Rotate(radians);
+	}
 	void ScaleIndependent(float scaleX_in, float scaleY_in)
 	{
 		translation.x *= scaleX_in;
@@ -31,11 +36,12 @@ public:
 	}
 	void Render(Graphics& gfx)
 	{
-		gfx.DrawClosedPolyline(*model, translation, scaleX, scaleY, c);
+		gfx.DrawClosedPolyline(*model, translation, scaleX, scaleY, rotation, c);
 	}
 private:
 	Color c;
 	const std::vector<Vef2>* model;
+	float rotation = 0.0f;
 	Vef2 translation = { 0.0f,0.0f };
 	float scaleX = 1.0f;
 	float scaleY = 1.0f;

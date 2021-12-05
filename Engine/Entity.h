@@ -37,9 +37,18 @@ public:
 	{
 		return scale;
 	}
+	float GetAngle()const
+	{
+		return angle;
+	}
+	void SetAngle(float a)
+	{
+		angle = a;
+	}
 	Drawable GetDrawable()const
 	{
 		Drawable d(model, c);
+		d.RotateBy(angle);
 		d.Scale(scale);
 		d.Translate(pos);
 		
@@ -59,6 +68,7 @@ protected:
 	}
 private:
 	Color c;
+	float angle = 0.0f;
 	float scale = 1.0f;
 	Vef2 pos;
 	std::vector<Vef2> model;

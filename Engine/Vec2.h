@@ -114,6 +114,21 @@ public:
 		return Vec2(-x, -y);
 	}
 
+	Vec2& Rotate(T radians)
+	{
+		const T sin = std::sin(radians);
+		const T cos = std::cos(radians);
+		const T new_x = x * cos - y * sin;
+		y = x * sin + y * cos;
+		x = new_x;
+		return *this;
+	}
+
+	Vec2 GetRotated(T radians)const
+	{
+		return Vec2(*this).Rotate(radians);
+	}
+
 	Vec2& operator=(const Vec2& rhs)
 	{
 		x = rhs.x;
