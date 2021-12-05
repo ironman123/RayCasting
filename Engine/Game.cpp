@@ -33,7 +33,7 @@ Game::Game(MainWindow& wnd)
 	rng(rd()),
 	ct(gfx),
 	cam(ct),
-	camCtrl(cam,wnd.mouse),
+	camCtrl(cam, wnd.mouse, wnd.kbd),
 	plank({ 180.0f,150.0f }, -240.0f, -270.0f, 300.0f),
 	spwaner(balls, radius, Vef2{ 0.0f,180.0f }, -50.0f, -12.0f, 12.0f, 1.8f)
 {
@@ -49,9 +49,10 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	camCtrl.Update();
-
 	float dt = ft.Mark();
+
+	camCtrl.Update(dt);
+	
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
 		plank.MoveFreeY(-2.0f);
@@ -92,7 +93,7 @@ void Game::UpdateModel()
 
 		if (bottomDist < balls[i].GetRadius() || topDist < balls[i].GetRadius())
 		{
-			DoBoundaryCollision(std::make_pair(plankPts.first, plankPts.second), &balls[i]);
+			//DoBoundaryCollision(std::make_pair(plankPts.first, plankPts.second), &balls[i]);
 		}
 
 	}
@@ -105,7 +106,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	cam.Draw(plank.GetDrawable());
+	//cam.Draw(plank.GetDrawable());
 	
 	for (auto& ball : balls)
 	{
