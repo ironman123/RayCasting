@@ -102,3 +102,12 @@ Vec2<T> NormalToPointFromLine(const Vec2<T>& l0, const Vec2<T>& l1, const Vec2<T
 		return (p - lineComponentofP).Normalize();
 	}
 }
+
+template <typename T>
+Vec2<T> RotateVec(const Vec2<T>& vec, float radRotation)
+{
+	const float sin = std::sin(radRotation);
+	const float cos = std::cos(radRotation);
+
+	return Vec2<T>{vec.x * cos - vec.y * sin, vec.x * sin + vec.y * cos };
+}
