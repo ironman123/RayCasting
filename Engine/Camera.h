@@ -29,10 +29,19 @@ public:
 	{
 		scale = val;
 	}
+	float GetAngle() const
+	{
+		return angle;
+	}
+	void SetAngle(float radians)
+	{
+		angle = radians;
+	}
 	void Draw(Drawable& drawable)const
 	{
 		drawable.Translate(-pos);
 		drawable.Scale(scale);
+		drawable.RotateBy(angle);
 		ct.Draw(drawable);
 	}
 	RectF GetViewPort()const
@@ -44,4 +53,5 @@ private:
 	CoordinateTransformer& ct;
 	Vef2 pos = { 0.0f,0.0f };
 	float scale = 1.0f;
+	float angle = 0.0f;
 };

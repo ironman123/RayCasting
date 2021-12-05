@@ -5,13 +5,23 @@
 class CamMouseCtrl
 {
 public:
-	CamMouseCtrl(Camera& cam, Mouse& mouse)
+	CamMouseCtrl(Camera& cam, Mouse& mouse, const Keyboard& kbd)
 		:
+		kbd(kbd),
 		cam(cam),
 		mouse(mouse)
 	{}
-	void Update()
+	void Update(float dt)
 	{
+		if (kbd.KeyIsPressed('E'))
+		{
+			cam.SetAngle(cam.GetAngle() + dt);
+		}
+		else if (kbd.KeyIsPressed('Q'))
+		{
+			cam.SetAngle(cam.GetAngle() - dt);
+		}
+
 		while (!mouse.IsEmpty())
 		{
 			auto e = mouse.Read();
@@ -39,14 +49,17 @@ public:
 			const auto curPos = (Vef2)mouse.GetPos();
 			auto delta = curPos - last;
 			delta.x = -delta.x;
+			delta.Rotate(-cam.GetAngle());
 			cam.MoveBy(delta / cam.GetScale());
 			last = curPos;
 		}
 	}
 private:
+	Mouse& mouse;
+	const Keyboard& kbd;
 	Vef2 last;
 	bool engaged = false;
 	Camera& cam;
-	Mouse& mouse;
+	
 	static constexpr float zoomFactor = 1.05f;
 };
