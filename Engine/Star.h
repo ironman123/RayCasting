@@ -10,7 +10,7 @@ public:
 		std::vector<Vef2> star;
 		star.reserve(nFlares * 2);
 
-		const float dTheta = 2.0f * 3.14159 / float(nFlares * 2);
+		const float dTheta = float(2.0f * 3.14159) / float(nFlares * 2);
 
 		for (int i = 0; i < nFlares * 2; i++)
 		{

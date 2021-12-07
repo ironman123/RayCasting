@@ -25,6 +25,8 @@
 #include <algorithm>
 #include "ChiliMath.h"
 #include "ChiliPhysics.h"
+#include "Mat3.h"
+
 
 Game::Game(MainWindow& wnd)
 	:
@@ -106,7 +108,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	//cam.Draw(plank.GetDrawable());
+	cam.Draw(plank.GetDrawable());
 	
 	for (auto& ball : balls)
 	{
