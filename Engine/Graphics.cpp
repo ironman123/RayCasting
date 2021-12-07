@@ -415,32 +415,16 @@ void Graphics::DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c)
 	}
 }
 
-void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& translation, float scaleX, float scaleY, float rotation,Color c)
+void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Maf3& transform, Color c)
 {
-	const float sin = std::sin(rotation);
-	const float cos = std::cos(rotation);
 
 	//Color colors[] = { Colors::Blue, Colors::Cyan, Colors::Gray, Colors::Green,Colors::LightGray,Colors::Magenta,Colors::Red,Colors::White,Colors::Yellow,Colors::MakeRGB(150,90,30) };
-	
-	const auto xForm = [&](Vef2 v)
-	{
-		//rotation
-		const float new_x = v.x * cos - v.y * sin;
-		v.y = v.x * sin + v.y * cos;
-		v.x = new_x;
-		//scaling
-		v.x *= scaleX;
-		v.y *= scaleY;
-		//translation
-		v += translation;
-		return v;
-	};
 
-	const Vef2 front = xForm(verts.front());
+	const Vef2 front = transform * verts.front();
 	Vef2 cur = front;
 	for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
 	{
-		const Vec2 next = xForm(*std::next(i));
+		const Vec2 next = transform * *std::next(i);
 		//DrawLine(cur, next, colors[i - verts.begin()]);
 		DrawLine(cur, next, c);
 		cur = next;
