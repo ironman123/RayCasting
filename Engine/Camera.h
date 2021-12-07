@@ -39,9 +39,7 @@ public:
 	}
 	void Draw(Drawable& drawable)const
 	{
-		drawable.Translate(-pos);
-		drawable.Scale(scale);
-		drawable.RotateBy(angle);
+		drawable.ApplyTransformation(Maf3::Rotate(angle) * Maf3::Scale(scale) * Maf3::Translation(-pos));
 		ct.Draw(drawable);
 	}
 	RectF GetViewPort()const

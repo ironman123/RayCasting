@@ -48,9 +48,8 @@ public:
 	Drawable GetDrawable()const
 	{
 		Drawable d(model, c);
-		d.RotateBy(angle);
-		d.Scale(scale);
-		d.Translate(pos);
+
+		d.ApplyTransformation(Maf3::Translation(pos) * Maf3::Scale(scale) * Maf3::Rotate(angle));
 		
 		return d;
 	}

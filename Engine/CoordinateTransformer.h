@@ -15,8 +15,7 @@ public:
 	{
 		const Vef2 offset = { Graphics::ScreenWidth / 2,Graphics::ScreenHeight / 2 };
 
-		drawable.ScaleIndependent(1.0f, -1.0f);
-		drawable.Translate(offset);
+		drawable.ApplyTransformation(Maf3::Translation(offset) * Maf3::ScaleIndependent(1.0f, -1.0f));
 		drawable.Render(gfx);
 	}
 private:

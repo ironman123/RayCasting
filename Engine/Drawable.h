@@ -3,6 +3,7 @@
 #include <vector>
 #include "Graphics.h"
 #include <memory>
+#include "Mat3.h"
 
 class Drawable
 {
@@ -12,37 +13,16 @@ public:
 		c(c),
 		model(&model)
 	{}
-	void Translate(const Vef2& translation_in)
+	void ApplyTransformation(const Maf3& transformatin_in)
 	{
-		translation += translation_in;
-	}
-	void Scale(float scale_in)
-	{
-		translation *= scale_in;
-		scaleX *= scale_in;
-		scaleY *= scale_in;
-	}
-	void RotateBy(float radians)
-	{
-		rotation += radians;
-		translation.Rotate(radians);
-	}
-	void ScaleIndependent(float scaleX_in, float scaleY_in)
-	{
-		translation.x *= scaleX_in;
-		translation.y *= scaleY_in;
-		scaleX *= scaleX_in;
-		scaleY *= scaleY_in;
+		transformation = transformatin_in * transformation;
 	}
 	void Render(Graphics& gfx)
 	{
-		gfx.DrawClosedPolyline(*model, translation, scaleX, scaleY, rotation, c);
+		gfx.DrawClosedPolyline(*model, transformation, c);
 	}
 private:
 	Color c;
 	const std::vector<Vef2>* model;
-	float rotation = 0.0f;
-	Vef2 translation = { 0.0f,0.0f };
-	float scaleX = 1.0f;
-	float scaleY = 1.0f;
+	Maf3 transformation = Maf3::Identity();
 };
