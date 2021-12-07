@@ -419,6 +419,8 @@ void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& tr
 {
 	const float sin = std::sin(rotation);
 	const float cos = std::cos(rotation);
+
+	//Color colors[] = { Colors::Blue, Colors::Cyan, Colors::Gray, Colors::Green,Colors::LightGray,Colors::Magenta,Colors::Red,Colors::White,Colors::Yellow,Colors::MakeRGB(150,90,30) };
 	
 	const auto xForm = [&](Vef2 v)
 	{
@@ -439,9 +441,11 @@ void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Vef2& tr
 	for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
 	{
 		const Vec2 next = xForm(*std::next(i));
+		//DrawLine(cur, next, colors[i - verts.begin()]);
 		DrawLine(cur, next, c);
 		cur = next;
 	}
+	//DrawLine(cur, front, colors[9]);
 	DrawLine(cur, front, c);
 }
 
