@@ -5,6 +5,10 @@ template <typename T>
 class Mat3
 {
 public:
+	Vec2<T> operator* (const Vec2<T>& v)const
+	{
+		return Vec2<T>(*this * (Vec3<T>)v);
+	}
 	Vec3<T> operator* (const Vec3<T>& v)const
 	{
 		Vec3<T> out;
@@ -25,10 +29,6 @@ public:
 		}
 		return out;
 	}
-	Mat3& operator*=(const Mat3& rhs)const
-	{
-		return *this = *this * rhs;
-	}
 	static Mat3 Scale(T factor)
 	{
 		return
@@ -41,7 +41,7 @@ public:
 	static Mat3 Identity()
 	{
 		return
-		{ Scale((T)1);
+		{ Scale((T)1)
 			//(T)1, (T)0, (T)0,
 			//(T)0, (T)1, (T)0,
 			//(T)0, (T)0, (T)1
@@ -66,6 +66,33 @@ public:
 			cos , -sin , (T)0,
 			sin , cos  , (T)0,
 			(T)0, (T)0 , (T)1
+		};
+	}
+	static Mat3 ScaleIndependent(T xFactor, T yFactor)
+	{
+		return
+		{
+			xFactor, (T)0, (T)0,
+			(T)0 ,yFactor ,(T)0,
+			(T)0 , (T)0 ,(T)1
+		};
+	}
+	static Mat3 Translation(T x, T y)
+	{
+		return
+		{
+			(T)1, (T)0, x,
+			(T)0, (T)1, y,
+			(T)0, (T)0, (T)1
+		};
+	}
+	static Mat3 Translation(const Vec2<T>& v)
+	{
+		return
+		{
+			(T)1, (T)0, v.x,
+			(T)0, (T)1, v.y,
+			(T)0, (T)0, (T)1
 		};
 	}
 
