@@ -9,7 +9,7 @@ public:
 	Ball(Vef2 pos, float radius, Vef2 vel, Color c = Colors::Red)
 		:
 		spwanPos(pos),
-		Entity(Star::Make(radius, radius - 5.0f, 8), pos, c),
+		Entity(Star::Make(radius, radius, 8), pos, c),
 		radius(radius),
 		vel(vel)
 	{

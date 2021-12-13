@@ -60,9 +60,8 @@ private:
 
 	static constexpr float maxBallDist = 900.0f;
 
-	Plank plank;
 	std::vector<Ball> balls;
 	static constexpr float radius = 15.0f;
-	Spwaner spwaner;
+	
 	/********************************/
 };
