@@ -8,7 +8,6 @@ class Ball : public Entity
 public:
 	Ball(Vef2 pos, float radius, Vef2 vel, Color c = Colors::Red)
 		:
-		spwanPos(pos),
 		Entity(Star::Make(radius, radius, 8), pos, c),
 		radius(radius),
 		vel(vel)
@@ -32,9 +31,12 @@ public:
 		SetAngle(angle += dt);
 		TranslateBy(vel * dt);
 	}
+	RectF GetRect()const
+	{
+		return RectF(-radius, radius, radius, -radius);
+	}
 private:
 	float angle = 0.0f;
-	Vef2 spwanPos;
 	bool isSpwaned = false;
 	float radius;
 	Vef2 vel;

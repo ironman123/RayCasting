@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Ball.h"
 #include "ChiliMath.h"
+#include "Point.h"
 
 inline void DoBallCollision(Entity* e0, Entity* e1)
 {
@@ -61,14 +62,62 @@ inline void DoBallCollision(Entity* e0, Entity* e1)
 	}
 }
 
+//template <typename T>
+//inline void DoBoundaryCollision(const std::pair<Vec2<T>, Vec2<T>> points, Entity* e)
+//{
+//	const Vef2 w = NormalToPointFromLine(points.first, points.second, e->GetPos());
+//
+//	e->SetColor(Colors::Green);
+//	const Vef2 v = e->GetVel();
+//	//const Vef2 distAdjust = (-e->GetVel().GetNormalized()) * 2.0f * (e.GetRadius() - std::min(bottomDist, topDist));
+//
+//	e->SetVel(v - w * (2.0f * (w * v)));
+//}
+
 template <typename T>
-inline void DoBoundaryCollision(const std::pair<Vec2<T>, Vec2<T>> points, Entity* e)
+inline void UpdateEntity(float dt, std::vector<Point>& points)
 {
-	const Vef2 w = NormalToPointFromLine(points.first, points.second, e->GetPos());
+	for (auto& p : points)
+	{
+		const Vef2 vDel = p.pos - p.oldPos;
 
-	e->SetColor(Colors::Green);
-	const Vef2 v = e->GetVel();
-	//const Vef2 distAdjust = (-e->GetVel().GetNormalized()) * 2.0f * (e.GetRadius() - std::min(bottomDist, topDist));
+		p.oldPos = p.pos;
+		
+		p.pos += vDel;
+	}
+}
 
-	e->SetVel(v - w * (2.0f * (w * v)));
+template <typename T>
+inline void DoBoundaryCollision(std::vector<Point>& points, const Entity* boundary)
+{
+	const auto& rect = boundary->GetRect();
+	
+	for (auto& p : points)
+	{
+		const Vef2 vDel = p.pos - p.oldPos;
+
+		if (!rect.ContainsPoint(p))
+		{
+			if (p.x > rect.right)
+			{
+				p.pos.x = (2.0f * rect.right - p.pos.x);
+				p.oldPos.x = p.pos.x + vDel.x;
+			}
+			else if (p.x < rect.left)
+			{
+				p.pos.x = (2.0f * rect.left - p.pos.x);
+				p.oldPos.x = p.pos.x + vDel.x;
+			}
+			if (p.y < rect.bottom)
+			{
+				p.pos.y = (2.0f * rect.bottom - p.pos.y);
+				p.oldPos.y = p.pos.y + vDel.y;
+			}
+			else if (p.x > rect.top)
+			{
+				p.pos.y = (2.0f * rect.top - p.pos.y);
+				p.oldPos.y = p.pos.y + vDel.y;
+			}
+		}
+	}
 }

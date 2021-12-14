@@ -24,6 +24,14 @@ public:
 		Rect(topLeft, topLeft + Vec2<T>(widht, height))
 	{
 	}
+	Rect operator*(T scale)const
+	{
+		return RectF(left * scale, right * scale, top * scale, bottom * scale);
+	}
+	Rect& operator*=(T scale)
+	{
+		return *this = *this * scale;
+	}
 	T GetWidth()const
 	{
 		return right - left;
