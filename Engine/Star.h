@@ -17,8 +17,9 @@ public:
 			const float rad = (i % 2 == 0) ? outerRadius : innerRadius;
 
 			star.emplace_back(
-				rad * cos((float)i * dTheta ),
-				rad * sin((float)i * dTheta));
+					rad * cos((float)i * dTheta),
+					rad * sin((float)i * dTheta) 
+					);
 		}
 		return star;
 	}

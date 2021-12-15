@@ -35,8 +35,23 @@ Game::Game(MainWindow& wnd)
 	rng(rd()),
 	ct(gfx),
 	cam(ct),
-	camCtrl(cam, wnd.mouse, wnd.kbd)
+	camCtrl(cam, wnd.mouse, wnd.kbd),
+	bounds(Vef2{0.0f,0.0f},375.0f,275.0f),
+	pE(pModel),
+	sE(sModel)
 {
+	pModel.emplace_back(Vef2{ 50.0f,50.0f }, Vef2{ 52.0f,52.0f });
+	pModel.emplace_back(Vef2{ 100.0f,50.0f }, Vef2{ 102.0f,52.0f });
+	pModel.emplace_back(Vef2{ 100.0f,100.0f }, Vef2{ 102.0f,102.0f });
+	pModel.emplace_back(Vef2{ 50.0f,100.0f }, Vef2{ 52.0f,102.0f });
+	pE.SetModel(pModel);
+
+	sModel.emplace_back(Stick{ pModel[0],pModel[1] });
+	sModel.emplace_back(Stick{ pModel[1],pModel[2] });
+	sModel.emplace_back(Stick{ pModel[2],pModel[3] });
+	sModel.emplace_back(Stick{ pModel[3],pModel[0] });
+	//sModel.emplace_back(Stick{ pModel[2],pModel[0] });
+	sE.SetModel(sModel);
 }
 
 void Game::Go()
@@ -52,10 +67,23 @@ void Game::UpdateModel()
 	float dt = ft.Mark();
 
 	camCtrl.Update(dt);
-	
-	
+
+	UpdatePtEntity(dt, pE.GetPtrModel());
+
+	sE.Update();
+	UpdatePtEntity(dt, sE.GetPtModel());
+	UpdateStEntity(dt, sE.GetStModel(), bounds);
+	DoBoundaryCollision(sE.GetPtModel(), bounds);
+	sE.Update();
+
+
+	DoBoundaryCollision(pE.GetPtrModel(), bounds);
+	//DoBoundaryCollision(sE.GetPtModel(), bounds);
 }
 
 void Game::ComposeFrame()
 {
+	cam.Draw(bounds.GetDrawable());
+	cam.Draw(pE.GetDrawable());
+	cam.Draw(sE.GetDrawable());
 }

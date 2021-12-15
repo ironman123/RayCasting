@@ -422,16 +422,52 @@ void Graphics::DrawClosedPolyline(const std::vector<Vef2>& verts, const Maf3& tr
 
 	const Vef2 front = transform * verts.front();
 	Vef2 cur = front;
-	for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
+	if (verts.size() == 1)
 	{
-		const Vec2 next = transform * *std::next(i);
-		//DrawLine(cur, next, colors[i - verts.begin()]);
-		DrawLine(cur, next, c);
-		cur = next;
+		if ((int)cur.x > 0 && (int)cur.x < Graphics::ScreenWidth && (int)cur.y > 0 && (int)cur.y < Graphics::ScreenHeight)
+		{
+			PutPixel(cur.x, cur.y, c);
+		}
 	}
-	//DrawLine(cur, front, colors[9]);
-	DrawLine(cur, front, c);
+	else
+	{
+		for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
+		{
+			const Vec2 next = transform * *std::next(i);
+			//DrawLine(cur, next, colors[i - verts.begin()]);
+			DrawLine(cur, next, c);
+			cur = next;
+		}
+		//DrawLine(cur, front, colors[9]);
+		DrawLine(cur, front, c);
+	}
 }
+
+//void Graphics::DrawClosedPolyline(const std::vector<Point>& verts, const Maf3& transform, Color c)
+//{
+//
+//	//Color colors[] = { Colors::Blue, Colors::Cyan, Colors::Gray, Colors::Green,Colors::LightGray,Colors::Magenta,Colors::Red,Colors::White,Colors::Yellow,Colors::MakeRGB(150,90,30) };
+//
+//	const Vef2 front = transform * verts.front().pos;
+//	Vef2 cur = front;
+//
+//	if (cur == front)
+//	{
+//		PutPixel(cur.x, cur.y, c);
+//	}
+//	else
+//	{
+//		for (auto i = verts.begin(); i != std::prev(verts.end()); i++)
+//		{
+//			const Vec2 next = transform * std::next(i)->pos;
+//			//DrawLine(cur, next, colors[i - verts.begin()]);
+//			DrawLine(cur, next, c);
+//			cur = next;
+//		}
+//		//DrawLine(cur, front, colors[9]);
+//		DrawLine(cur, front, c);
+//	}
+//}
 
 Graphics::~Graphics()
 {

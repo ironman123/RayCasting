@@ -25,6 +25,10 @@ public:
 	{
 		pos += offset;
 	}
+	void MoveTo(const Vef2& position)
+	{
+		pos = position;
+	}
 	void SetScale(float val)
 	{
 		scale = val;
@@ -47,17 +51,22 @@ public:
 	}
 	Drawable GetDrawable()const
 	{
-		Drawable d(model, c);
+		Drawable d(model , c);
 
 		d.ApplyTransformation(Maf3::Translation(pos) * Maf3::Scale(scale) * Maf3::Rotate(angle));
 		
 		return d;
+	}
+	const std::vector<Vef2>& GetModel()const
+	{
+		return model;
 	}
 /********************************/
 //virtual Functions Start
 	virtual float GetRadius()const = 0;
 	virtual Vef2 GetVel()const =  0;
 	virtual void SetVel(const Vef2& vel_in) = 0;
+	virtual RectF GetRect()const = 0;
 //virtual Functions End
 /********************************/
 protected:

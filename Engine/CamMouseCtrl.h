@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Mouse.h"
 
+template <typename T>
 class CamMouseCtrl
 {
 public:

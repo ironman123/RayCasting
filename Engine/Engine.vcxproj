@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="Boundary.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CamMouseCtrl.h" />
     <ClInclude Include="Cell.h" />
@@ -147,7 +148,6 @@
     <ClInclude Include="ChiliMath.h" />
     <ClInclude Include="ChiliPhysics.h" />
     <ClInclude Include="ChiliWin.h" />
-    <ClInclude Include="Collider.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="CoordinateTransformer.h" />
     <ClInclude Include="Drawable.h" />
@@ -160,11 +160,14 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mat3.h" />
     <ClInclude Include="Mouse.h" />
-    <ClInclude Include="Plank.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="PointEntity.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Spwaner.h" />
     <ClInclude Include="Star.h" />
+    <ClInclude Include="StickEntity.h" />
+    <ClInclude Include="Stick.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
   </ItemGroup>

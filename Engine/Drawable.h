@@ -4,6 +4,7 @@
 #include "Graphics.h"
 #include <memory>
 #include "Mat3.h"
+#include "Point.h"
 
 class Drawable
 {

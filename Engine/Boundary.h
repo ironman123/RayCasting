@@ -38,7 +38,7 @@ public:
 
 	}
 private:
-	Vef2 vel;
+	Vef2 vel = { 0.0f,0.0f };
 	RectF rect;
 	float width;
 	float height;

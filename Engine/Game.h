@@ -25,12 +25,14 @@
 #include "Graphics.h"
 #include <random>
 #include "FrameTimer.h"
-#include "Plank.h"
 #include "Camera.h"
 #include "CoordinateTransformer.h"
 #include "Ball.h"
 #include "Spwaner.h"
 #include "CamMouseCtrl.h"
+#include "Boundary.h"
+#include "PointEntity.h"
+#include "StickEntity.h"
 
 class Game
 {
@@ -56,12 +58,18 @@ private:
 
 	CoordinateTransformer ct;
 	Camera cam;
-	CamMouseCtrl camCtrl;
+	CamMouseCtrl<Vef2> camCtrl;
 
 	static constexpr float maxBallDist = 900.0f;
 
-	std::vector<Ball> balls;
-	static constexpr float radius = 15.0f;
-	
+	//std::vector<Ball> balls;
+	//Ball ball;
+	//static constexpr float radius = 10.0f;
+
+	Boundary bounds;
+	std::vector<Point> pModel;
+	std::vector<Stick> sModel;
+	PointEntity pE;
+	StickEntity sE;
 	/********************************/
 };

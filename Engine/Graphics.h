@@ -26,6 +26,7 @@
 #include "Vec2.h"
 #include <vector>
 #include "Mat3.h"
+#include "Point.h"
 
 class Graphics
 {
@@ -73,6 +74,7 @@ public:
 	void DrawLineDDA(Vei2 p1, Vei2 p2, Color c);
 	void DrawLineFromPoint(Vei2 p1, Vei2 p2, Color c);
 	void DrawClosedPolyline(const std::vector<Vef2>& verts, const Maf3& transform, Color c);
+	//void DrawClosedPolyline(const std::vector<Point>& verts, const Maf3& transform, Color c);
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
@@ -89,6 +91,6 @@ private:
 	D3D11_MAPPED_SUBRESOURCE							mappedSysBufferTexture;
 	Color*                                              pSysBuffer = nullptr;
 public:
-	static constexpr int ScreenWidth = 801;
-	static constexpr int ScreenHeight = 601;
+	static constexpr int ScreenWidth = 800;
+	static constexpr int ScreenHeight = 600;
 };

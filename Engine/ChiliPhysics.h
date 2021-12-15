@@ -4,6 +4,11 @@
 #include "ChiliMath.h"
 #include "Point.h"
 
+
+const Vef2 gravity = { 0.0f, -0.2f };
+const float restitution = 0.85f;
+const float friction = 0.999f;
+
 inline void DoBallCollision(Entity* e0, Entity* e1)
 {
 	const float b1_rad = e0->GetRadius();
@@ -74,50 +79,69 @@ inline void DoBallCollision(Entity* e0, Entity* e1)
 //	e->SetVel(v - w * (2.0f * (w * v)));
 //}
 
-template <typename T>
-inline void UpdateEntity(float dt, std::vector<Point>& points)
+inline void UpdatePtEntity(float dt, std::vector<Point>* points)
 {
-	for (auto& p : points)
+	for (auto& p : *points)
 	{
-		const Vef2 vDel = p.pos - p.oldPos;
+		const Vef2 vDel = (p.pos - p.oldPos) * friction;
 
 		p.oldPos = p.pos;
 		
-		p.pos += vDel;
+		p.pos += vDel + gravity;
 	}
 }
 
-template <typename T>
-inline void DoBoundaryCollision(std::vector<Point>& points, const Entity* boundary)
+inline void DoBoundaryCollision(std::vector<Point>* points, const Boundary& boundary)
 {
-	const auto& rect = boundary->GetRect();
+	const auto& rect = boundary.GetRect();
 	
-	for (auto& p : points)
+	for (auto& p : *points)
 	{
-		const Vef2 vDel = p.pos - p.oldPos;
+		const Vef2 vDel = (p.pos - p.oldPos) * restitution * friction;
 
-		if (!rect.ContainsPoint(p))
+		if (p.pos.x > rect.right)
 		{
-			if (p.x > rect.right)
-			{
-				p.pos.x = (2.0f * rect.right - p.pos.x);
-				p.oldPos.x = p.pos.x + vDel.x;
-			}
-			else if (p.x < rect.left)
-			{
-				p.pos.x = (2.0f * rect.left - p.pos.x);
-				p.oldPos.x = p.pos.x + vDel.x;
-			}
-			if (p.y < rect.bottom)
-			{
-				p.pos.y = (2.0f * rect.bottom - p.pos.y);
-				p.oldPos.y = p.pos.y + vDel.y;
-			}
-			else if (p.x > rect.top)
-			{
-				p.pos.y = (2.0f * rect.top - p.pos.y);
-				p.oldPos.y = p.pos.y + vDel.y;
-			}
+			p.pos.x = (2.0f * rect.right - p.pos.x);
+			p.oldPos.x = p.pos.x + vDel.x;
 		}
+		else if (p.pos.x < rect.left)
+		{
+			p.pos.x = (2.0f * rect.left - p.pos.x);
+			p.oldPos.x = p.pos.x + vDel.x;
+		}
+		if (p.pos.y < rect.bottom)
+		{
+			p.pos.y = (2.0f * rect.bottom - p.pos.y);
+			p.oldPos.y = p.pos.y + vDel.y;
+		}
+		else if (p.pos.y > rect.top)
+		{
+			p.pos.y = (2.0f * rect.top - p.pos.y);
+			p.oldPos.y = p.pos.y + vDel.y;
+		}
+	}
+}
+
+inline void UpdateStEntity(float dt, std::vector<Stick>* sticks, const Boundary& boundary)
+{
+	for (auto& s : *sticks)
+	{
+		const auto distance = s.GetDistance();
+		const auto difference = s.length - distance;
+
+		if (s.length != distance)
+		{
+			const auto percentange = difference / distance / 2.0f;
+			const auto offset = s.GetStickVec() * percentange;
+
+			s.points[0].pos -= offset;
+			s.points[1].pos += offset;
+		}
+	}
+
+	for (auto& s : *sticks)
+	{
+		UpdatePtEntity(dt, std::addressof(s.points));
+		DoBoundaryCollision(std::addressof(s.points), boundary);
 	}
 }
